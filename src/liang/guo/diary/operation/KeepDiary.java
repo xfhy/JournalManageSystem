@@ -65,7 +65,7 @@ public class KeepDiary {
 	private WeatherType selectWeather(){
 		showAllWeatherType();
 		System.out.println("请选择今天的天气类型:");
-		int choose = Utility.judgmentInput(6);
+		int choose = Utility.judgmentInput(6);      //让用户输入1~6的数字
 		switch (choose) {
 		case 1:
 			return WeatherType.SUNNY;
@@ -139,7 +139,6 @@ public class KeepDiary {
 		String dateValue = "";
 		boolean inputFlag = true;
 		while(inputFlag){
-			/*------------------2016年10月30日9:30:37  应该加异常----------------------------------*/
 			dateValue = inputDateScanner.nextLine();
 			if(Date.inputIsDate(dateValue)){  //判断输入的日期是否正确
 				inputFlag = false;
@@ -174,7 +173,6 @@ public class KeepDiary {
 	
 	/**
 	 * 让用户输入日记内容
-	 * haven't start
 	 * @return
 	 */
 	private String inputContent(){

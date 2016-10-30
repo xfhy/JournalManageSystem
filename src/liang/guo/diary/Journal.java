@@ -57,13 +57,16 @@ public class Journal {
 	 * @param index  索引
 	 * @return  如果索引不合法,则返回null
 	 */
-	public static User getUserAt(int index){
+	public static User getUserAt(int index) throws ArrayIndexOutOfBoundsException{
 		try {
 			return allUserInfo[index];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.err.println("传入用户数组参数不合法");
-			return null;
+		} catch (ArrayIndexOutOfBoundsException e) {    //数组下标越界
+			System.err.println("获取当前用户数组中该索引处的用户信息时出错,数组下标越界");
+			throw new ArrayIndexOutOfBoundsException("获取当前用户数组中该索引处的用户信息时出错,数组下标越界");
+		} catch (Exception e2){
+			e2.printStackTrace();
 		}
+		return null;
 		
 		/*if(index >= 0 && index < howManyPeople){
 			return allUserInfo[index];

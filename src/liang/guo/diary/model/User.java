@@ -202,7 +202,7 @@ public class User implements Cloneable{
 	 * @param userChooseProblem
 	 */
 	public void setUserChooseProblem(int userChooseProblem) throws IllegalArgumentException{
-		if(userChooseProblem < 0 || userChooseProblem >= 5){
+		if(userChooseProblem < 0 || userChooseProblem >= User.verificationProblem.length){
 			/*----------------------2016年10月30日11:01:01   断点------------------------------------*/
 			System.err.println("设置用户选择的密码验证问题索引时传入参数非法(传入索引不在1~5)");
 			throw new IllegalArgumentException("设置用户选择的密码验证问题索引时传入参数非法(传入索引不在1~5)");
@@ -276,7 +276,7 @@ public class User implements Cloneable{
 	}
 	
 	/**
-	 * 获取用户登录时输入的登录名
+	 * 获取用户登录时输入的登录名   只判断了长度为6~20
 	 * @return
 	 */
 	public static String getInputUserName(){
@@ -284,7 +284,6 @@ public class User implements Cloneable{
 		boolean inputFlag = true;
 		String userInput = "";
 		while (inputFlag) {
-			/*------------------2016年10月30日22:42:58 该加异常----------------------------------*/
 			userInput = inputInt.next(); // 获得用户输入的整数
 			if (userInput.length() >= 6 && userInput.length() <= 20) {
 				inputFlag = false;
@@ -297,7 +296,7 @@ public class User implements Cloneable{
 	}
 	
 	/**
-	 * 获取用户登录时输入的密码
+	 * 获取用户登录时输入的密码   只判断了长度为8~30
 	 * @return
 	 */
 	public static String getInputUserPassword(){
@@ -367,7 +366,7 @@ public class User implements Cloneable{
 		/*---------------------2016年9月30日19:57:41   断点----------------------------------------*/
 		/*---------------------2016年9月30日22:37:36   继续----------------------------------------*/
 		boolean flagSelectionProblem = (Journal.getAllUserInfo()[indexExistence]
-				.getUserChooseProblem() == selectionProblem);
+				.getUserChooseProblem() == selectionProblem);    //判断用户选择的问题是否和之前注册时选择的问题索引一致
 		// 用户回答正确
 		if (flagSelectionProblem && Journal.getAllUserInfo()[indexExistence].getUserQuestionAnswer()
 				.equals(questionAnswerTemp)) {
