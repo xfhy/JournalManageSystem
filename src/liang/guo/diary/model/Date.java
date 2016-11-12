@@ -24,13 +24,12 @@ public class Date {
 	 * @return  正确返回true,否则返回false
 	 */
 	public static boolean inputIsDate(String dateValue){
-		//先判断用户输入的是否是日期   \d{4}+[-]\d{1,2}+[-]\d{1,2}+
 		String regexDate = "\\d{4}+[-]\\d{1,2}+[-]\\d{1,2}+";
 		
-		//ERROR
 		if(!dateValue.matches(regexDate)){
 			return false;
 		}
+		
 		//根据-号分隔年月日  判断月份是否1~12,再将每个月的天数存下来,再判断当前年份是否为闰年,闰年则2月为29天,平年28天
 		String array[] = dateValue.split("-");
 		

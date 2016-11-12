@@ -38,7 +38,11 @@ public class Menu {
 		menuName = mainMenuName;
 		String loginSystemMenu = "1. 登录系统；";
 		if(Journal.isLogin){
-			loginSystemMenu = "1. ["+Journal.currentUser.getUserName()+"]退出登录；";
+			if(Journal.currentUser == null){
+				loginSystemMenu = "1. 退出登录；";
+			} else {
+				loginSystemMenu = "1. ["+Journal.currentUser.getUserName()+"]退出登录；";
+			}
 			System.out.println(loginSystemMenu);
 		} else {
 			System.out.println(loginSystemMenu);
@@ -147,7 +151,7 @@ public class Menu {
 	public void keepDiary(){
 		System.out.println("\t\t正在执行写日记\t\t");
 		KeepDiary writeDiary = new KeepDiary();
-		writeDiary.writeDiary();
+		writeDiary.writeDiary(Journal.currentUser.getUserName(),Journal.currentUser.getOwnDiaries());
 	}
 	
 	/**

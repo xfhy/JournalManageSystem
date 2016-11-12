@@ -1,10 +1,15 @@
 package liang.guo.diary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import liang.guo.diary.model.User;
-import liang.guo.diary.util.Utility;
+
 
 /**
  *  日记
+ *  
+ *  这是主类
  * 
  * @author 郭亮
  * 
@@ -14,7 +19,7 @@ import liang.guo.diary.util.Utility;
  * 
  * 2016年10月18日11:16:29 第三次 将属性封装到User中,并将相关属性的验证方法也放到User里面.
  * 
- * 2016年10月18日20:15:01 
+ * 2016年11月12日16:07:18 第四次 将数组改成集合,将Diary(日记类)加入User的属性
  * 
  */
 public class Journal {
@@ -31,53 +36,34 @@ public class Journal {
 	 * 当前用户
 	 */
 	public static User currentUser = new User();
-	
+
 	/**
-	 * 所有用户的信息
+	 * 所有用户的信息   
 	 */
-	private static User allUserInfo[] = new User[1000];
+	private static List<User> allUserInfo = new ArrayList<>();
 	
 	public static void main(String[] args) {
+		test();
 		Menu menu = new Menu(); // 实例化菜单类 
 		menu.run(); //跑起
 		
-		//showAllUserInfo();    //测试用
+		showAllUserInfo();    //测试用
 	}
 
 	/**
 	 * 获取所有的用户信息集合
 	 * @return
 	 */
-	public static User[] getAllUserInfo() {
+	public static List<User> getAllUserInfo() {
 		return allUserInfo;
 	}
-	
-	/**
-	 * 返回当前用户数组中该索引处的用户信息
-	 * @param index  索引
-	 * @return  如果索引不合法,则返回null
-	 */
-	public static User getUserAt(int index) throws ArrayIndexOutOfBoundsException{
-		try {
-			return allUserInfo[index];
-		} catch (ArrayIndexOutOfBoundsException e) {    //数组下标越界
-			System.err.println("获取当前用户数组中该索引处的用户信息时出错,数组下标越界");
-			throw new ArrayIndexOutOfBoundsException("获取当前用户数组中该索引处的用户信息时出错,数组下标越界");
-		} catch (Exception e2){
-			e2.printStackTrace();
-		}
-		return null;
-		
-		/*if(index >= 0 && index < howManyPeople){
-			return allUserInfo[index];
-		}*/
-	}
+
 	
 	/**
 	 * 设置所有的用户信息的集合
 	 * @param allUserInfo
 	 */
-	public static void setAllUserInfo(User[] allUserInfo) {
+	public static void setAllUserInfo(List<User> allUserInfo) {
 		Journal.allUserInfo = allUserInfo;
 	}
 
@@ -86,13 +72,26 @@ public class Journal {
 	 */
 	public static void showAllUserInfo(){
 		System.out.println("所有用户信息如下:");
-		int length = -1;
-		for(User user : Journal.allUserInfo){
-			length++;
-			if(length < Journal.howManyPeople){
-				System.out.println(user);
-			}
+
+		//遍历List(所有用户)集合
+		for(User user : allUserInfo){
+			System.out.println(user.toString()+user.getOwnDiaries().toString());
 		}
+	}
+	
+	/**
+	 * 为了测试方便,加入了一个测试用户
+	 */
+	public static void test(){
+		User userTemp = new User();
+		userTemp.setUserName("xfhy666");
+		userTemp.setUserDisplayName("xfhy");
+		userTemp.setUserPassword("qwert;123");
+		userTemp.setUserMailBox("123456789@qq.com");
+		userTemp.setUserChooseProblem(0);
+		userTemp.setUserQuestionAnswer("xfhy");
+		Journal.getAllUserInfo().add(userTemp);
+		Journal.howManyPeople++;
 	}
 	
 }

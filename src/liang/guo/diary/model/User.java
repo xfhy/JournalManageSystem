@@ -1,5 +1,8 @@
 package liang.guo.diary.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,12 +24,6 @@ import liang.guo.diary.util.Utility;
  * 
  */
 public class User implements Cloneable{
-	
-	
-	/**
-	 * 当前登录用户的索引
-	 */
-	private int howManyPeopleLogin = -1;   //ok
 	/**
 	 * 存放用户姓名
 	 */
@@ -56,6 +53,10 @@ public class User implements Cloneable{
 	 * 存放用户回答的密码提示问题的答案
 	 */
 	private String userQuestionAnswer;
+	/**
+	 * 该用户对应的日记列表
+	 */
+	private List<Diary> ownDiaries = new ArrayList<>();
 	
 	/**
 	 * 判断用户登录是否成功
@@ -65,43 +66,30 @@ public class User implements Cloneable{
 	public boolean loginJudgmen(String loginName,String loginPassword){
 		boolean isRealUsers = false;
 		
-		int i=0;
+		//遍历List(所有用户)集合
 		for(User user : Journal.getAllUserInfo()){
-			i++;
+			//如果用户名和密码都与库中的用户信息对的上,则说明登录成功
 			if(user.getUserName().equals(loginName) && 
 					user.getUserPassword().equals(loginPassword)){
 				isRealUsers = true;
-				this.howManyPeopleLogin = i;
-				try {
-					Journal.currentUser = (User) user.clone();
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}   //找到这个人的信息,则让当前currentUser属性为该用户的数据
-				break;
 			}
 		}
+
 		return isRealUsers;
 	}
 
-	/**
-	 * 获取当前登录用户的索引
-	 * @return
-	 */
-	public int getHowManyPeopleLogin() {
-		return howManyPeopleLogin;
-	}
 
 	/**
 	 * 设置当前登录用户的索引
 	 * @param howManyPeopleLogin
 	 */
-	public void setHowManyPeopleLogin(int howManyPeopleLogin) throws ArrayIndexOutOfBoundsException{
+	/*public void setHowManyPeopleLogin(int howManyPeopleLogin) throws ArrayIndexOutOfBoundsException{
 		if(howManyPeopleLogin<0 || howManyPeopleLogin >= Journal.getAllUserInfo().length){
 			throw new ArrayIndexOutOfBoundsException("设置当前登录用户的索引时数组下标越界");
 		} else {
 			this.howManyPeopleLogin = howManyPeopleLogin;
 		}
-	}
+	}*/
 
 	
 	/**
@@ -192,7 +180,6 @@ public class User implements Cloneable{
 	 * 获取用户选择的密码验证问题索引
 	 * @return
 	 */
-
 	public int getUserChooseProblem() {
 		return userChooseProblem;
 	}
@@ -268,9 +255,8 @@ public class User implements Cloneable{
 		temp.append("显示名: "+this.userDisplayName+"\n");
 		temp.append("密码: "+this.userPassword+"\n");
 		temp.append("邮箱: "+this.userMailBox+"\n");
-		temp.append("用户选择的问题索引: "+this.userChooseProblem+"\n");
-		temp.append("用户的问题: "+this.userQuestionAnswer+"\n");
-		temp.append("当前用户的索引: "+this.howManyPeopleLogin+"\n");
+		temp.append("用户选择的密码验证问题: "+User.verificationProblem[this.userChooseProblem]+"\n");
+		temp.append("用户的密码验证问题答案: "+this.userQuestionAnswer+"\n");
 		
 		return temp.toString();
 	}
@@ -279,16 +265,23 @@ public class User implements Cloneable{
 	 * 获取用户登录时输入的登录名   只判断了长度为6~20
 	 * @return
 	 */
+	@SuppressWarnings("resource")
 	public static String getInputUserName(){
 		Scanner inputInt = new Scanner(System.in);
 		boolean inputFlag = true;
 		String userInput = "";
 		while (inputFlag) {
-			userInput = inputInt.next(); // 获得用户输入的整数
-			if (userInput.length() >= 6 && userInput.length() <= 20) {
-				inputFlag = false;
-			} else {
-				System.err.println("输入不合法,用户名的长度是6~20个字符");
+			try{
+				userInput = inputInt.next(); // 获得用户输入的整数
+				if (userInput.length() >= 6 && userInput.length() <= 20) {
+					inputFlag = false;
+				} else {
+					System.err.println("输入不合法,用户名的长度是6~20个字符");
+					inputInt = new Scanner(System.in);
+				}
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
 				inputInt = new Scanner(System.in);
 			}
 		}
@@ -299,6 +292,7 @@ public class User implements Cloneable{
 	 * 获取用户登录时输入的密码   只判断了长度为8~30
 	 * @return
 	 */
+	@SuppressWarnings("resource")
 	public static String getInputUserPassword(){
 		
 		/*----------------2016年9月29日20:51:47   断点-----------------------------------------*/
@@ -306,51 +300,97 @@ public class User implements Cloneable{
 		boolean inputFlag = true;
 		String userInput = "";
 		while (inputFlag) {
-			userInput = inputInt.next(); // 获得用户输入的整数
-			if (userInput.length() >= 8 && userInput.length() <= 30) {
-				inputFlag = false;
-			} else {
-				System.err.println("输入不合法,密码的长度是8~30个字符");
+			try{
+				userInput = inputInt.next(); // 获得用户输入的整数
+				if (userInput.length() >= 8 && userInput.length() <= 30) {
+					inputFlag = false;
+				} else {
+					System.err.println("输入不合法,密码的长度是8~30个字符");
+					inputInt = new Scanner(System.in);
+				}
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
 				inputInt = new Scanner(System.in);
 			}
+			
 		}
 		return userInput;
 	}
 	
 	/**
-	 * 判断该用户是否存在,存在则返回该用户在数组中的索引
+	 * 判断该用户是否存在
 	 * @param userName  需要判断是否存在的用户名
-	 * @return 返回是否存在   不存在则返回-1
+	 * @return 返回是否存在   boolean 存在:true,不存在:false
 	 */
-	public static int haveThisUser(String userName){
-		int indexExistence = -1;
+	public static boolean haveThisUser(String userName){
+		boolean userExistence = false;
 
-		int i=-1;
-		for (User user : Journal.getAllUserInfo()) {
-			i++;
-			if(user == null){
-				break;
-			}else if(user.getUserName().equals(userName)){
-				indexExistence = i;
-				break;
+		//遍历List(所有用户)集合
+		for(User user : Journal.getAllUserInfo()){
+			//如果名字相同,则存在该用户
+			if(user.getUserName().equals(userName)){
+				userExistence = true;
 			}
 		}
 		
-		return indexExistence;
+		return userExistence;
+	}
+	
+	/**
+	 * 通过用户名获取用户该用户在集合(所有用户列表)中的索引
+	 * @param userName 用户名
+	 * @return 当找到该用户名所对应的用户时,则返回该索引,如果未找到则返回-1
+	 */
+	public static int getUserIndexByName(String userName){
+		if(userName.length() == 0){
+			System.err.println("通过用户名获取用户时,传入用户名为空");
+			return -1;
+		}
+		
+		int userIndex = -1;
+		
+		//遍历List(所有用户)集合
+		for (int i = 0; i < Journal.getAllUserInfo().size(); i++) {
+			if(Journal.getAllUserInfo().get(i).getUserName().equals(userName)){
+				userIndex = i;
+			}
+		}
+		
+		return userIndex;
+	}
+	
+	/**
+	 * 通过用户名获取用户类User
+	 * @param userName 用户名
+	 * @return 当找到该用户名所对应的用户时,则返回该User,如果未找到则返回null
+	 */
+	public static User getUserByName(String userName){
+		if(userName.length() == 0){
+			System.err.println("通过用户名获取用户时,传入用户名为空");
+			return null;
+		}
+		for (int i = 0; i < Journal.getAllUserInfo().size(); i++) {
+			if(Journal.getAllUserInfo().get(i).getUserName().equals(userName)){
+				return Journal.getAllUserInfo().get(i);
+			}
+		}
+		return null;
 	}
 	
 	/**
 	 * 用户找回密码
+	 * 2016年11月12日16:16:39  将数组改成集合时修改
 	 */
 	public static void userRetrievePassword(){
 		System.out.println("\n\t这是用户找回密码界面~");
 		System.out.println("请输入您的用户名:");
 		String userNameTemp = User.getInputUserName();   //获取用户输入的用户名
 		
-		int indexExistence = haveThisUser(userNameTemp);  //获取该用户在数组中的索引(如果存在该用户)
+		User user = getUserByName(userNameTemp);
 		
 		//首先判断该用户是否存在
-		if( indexExistence == -1){
+		if( user == null ){
 			System.err.println("该用户不存在~");
 			return ;
 		} 
@@ -360,22 +400,22 @@ public class User implements Cloneable{
 		System.out.println("请输入您的选择:");
 		int selectionProblem = Utility.judgmentInput(5);  //获取用户正确的输入
 		
-		//System.out.println("请输入该问题的答案:");
 		String questionAnswerTemp = inputQuestionAnswer();  //让用户输入密码验证问题的答案
 		
 		/*---------------------2016年9月30日19:57:41   断点----------------------------------------*/
 		/*---------------------2016年9月30日22:37:36   继续----------------------------------------*/
-		boolean flagSelectionProblem = (Journal.getAllUserInfo()[indexExistence]
-				.getUserChooseProblem() == selectionProblem);    //判断用户选择的问题是否和之前注册时选择的问题索引一致
+		
+		/*---------------------2016年11月12日16:10:14 将数组改成集合--------------------------------*/
+		 //判断用户选择的问题是否和之前注册时选择的问题索引一致
+		boolean flagSelectionProblem = (user.getUserChooseProblem() == selectionProblem);   
 		// 用户回答正确
-		if (flagSelectionProblem && Journal.getAllUserInfo()[indexExistence].getUserQuestionAnswer()
+		if (flagSelectionProblem && user.getUserQuestionAnswer()
 				.equals(questionAnswerTemp)) {
 			System.out.println("\t密码提示问题验证成功!");
-			Journal.getAllUserInfo()[indexExistence]
-					.setUserPassword(inputUserPassword()); // 获取用户输入的密码(函数里面已包含确认密码)
+			user.setUserPassword(inputUserPassword()); // 获取用户输入的密码(函数里面已包含确认密码)
 			System.out.println("密码已成功更改~");
-			System.out.println("您的密码已更新,请一定不要告诉别人喔:   "
-					+ Journal.getAllUserInfo()[indexExistence].getUserPassword());
+			System.out.println("您的密码已更新,请一定不要告诉别人喔:   "+ user.getUserPassword());
+			System.out.println(user.toString());
 		} else {
 			System.err.println("回答错误,密码找回失败~");
 		}
@@ -395,20 +435,33 @@ public class User implements Cloneable{
 	/**
 	 * 让用户输入密码验证问题的答案
 	 */
+	@SuppressWarnings("resource")
 	public static String inputQuestionAnswer(){
 		String userAnswer = "";
 		boolean inputFalg = true;
 		Scanner inputAnswer = new Scanner(System.in);
 		System.out.println("请输入问题的答案");
 		while(inputFalg){
-			userAnswer = inputAnswer.nextLine();
-			if(userAnswer.length() > 0){
-				//存放用户回答的问题的答案
-				inputFalg = false;
-			} else {
-				System.out.println("亲,请重新输入问题的答案,不要留空白~");
+			try{
+				userAnswer = inputAnswer.nextLine();
+				if(userAnswer.length() > 0){
+					//存放用户回答的问题的答案
+					inputFalg = false;
+				} else {
+					System.out.println("亲,请重新输入问题的答案,不要留空白~");
+					inputAnswer = new Scanner(System.in);
+				}
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				inputAnswer = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
 				inputAnswer = new Scanner(System.in);
 			}
+			
 		}
 		return userAnswer;
 	}
@@ -417,6 +470,7 @@ public class User implements Cloneable{
 	 * 让用户输入密码
 	 * @return  返回用户输入的符合要求的密码
 	 */
+	@SuppressWarnings("resource")
 	public static String inputUserPassword(){
 		//用户密码必须包含字母数字和特殊符号，密码最短为 8 位，最长不能超过 30 位；密码和确认密码必须相同
 		String passwordTemp = null;      //密码
@@ -432,26 +486,37 @@ public class User implements Cloneable{
 		System.out.println("请输入密码:");
 		System.out.println("温馨提示 用户密码必须包含字母数字和特殊符号，不能包含汉字,密码最短为 8 位，最长不能超过 30 位");
 		while(inputFlag){
-			passwordTemp = input_password.nextLine();
-			System.out.println("请输入确认密码:");
-			input_password = new Scanner(System.in);
-			confirmPassword = input_password.nextLine();
-			if(passwordTemp.equals(confirmPassword)){
-				if(passwordTemp.matches(regexLetter) 
-						&& passwordTemp.matches(regexNumber)
-						&& passwordTemp.matches(regexSpecialChar)
-						&& !passwordTemp.matches(regexChinese)
-						&& passwordTemp.length() >= 8
-						&& passwordTemp.length() <= 30){
-					System.out.println("密码格式符合要求~");
-					inputFlag = false;
+			try{
+				passwordTemp = input_password.nextLine();
+				System.out.println("请输入确认密码:");
+				input_password = new Scanner(System.in);
+				confirmPassword = input_password.nextLine();
+				if(passwordTemp.equals(confirmPassword)){
+					if(passwordTemp.matches(regexLetter) 
+							&& passwordTemp.matches(regexNumber)
+							&& passwordTemp.matches(regexSpecialChar)
+							&& !passwordTemp.matches(regexChinese)
+							&& passwordTemp.length() >= 8
+							&& passwordTemp.length() <= 30){
+						System.out.println("密码格式符合要求~");
+						inputFlag = false;
+					} else {
+						System.out.println("亲,您输入的密码格式错误,请按照规定格式输入哦~");
+						System.out.println("下面,请重新输入密码:");
+						input_password = new Scanner(System.in);
+					}
 				} else {
-					System.out.println("亲,您输入的密码格式错误,请按照规定格式输入哦~");
-					System.out.println("下面,请重新输入密码:");
+					System.out.println("提示:您前后2次输入的密码输入不一致,请重新输入,谢谢~");
 					input_password = new Scanner(System.in);
 				}
-			} else {
-				System.out.println("提示:您前后2次输入的密码输入不一致,请重新输入,谢谢~");
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				input_password = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
 				input_password = new Scanner(System.in);
 			}
 		}
@@ -462,6 +527,7 @@ public class User implements Cloneable{
 	/**
 	 * 让用户输入用户名
 	 */
+	@SuppressWarnings("resource")
 	public static String inputUserName(){
 		String userNameTemp = null;
 		//用户名只能包含字母、数字和下划线，并且首字母只能为字母，用户名最短不能少于 6 个字符，最长不能超过 20 个字符。
@@ -473,18 +539,30 @@ public class User implements Cloneable{
 		System.out.println("温馨提示: 用户名只能包含字母、数字和下划线，并且首字母只能为字母，"
 				+ "用户名最短不能少于 6 个字符，最长不能超过 20 个字符");
 		while(inputFlag){
-			userNameTemp = input_user_name.nextLine();  //让用户输入一行
-			if(userNameTemp.length() >= 6 && userNameTemp.length() <= 20 && userNameTemp.matches(nameRegex)){
-				if(haveThisUser(userNameTemp)==-1){
-					inputFlag = false;
+			try{
+				userNameTemp = input_user_name.nextLine();  //让用户输入一行
+				if(userNameTemp.length() >= 6 && userNameTemp.length() <= 20 && userNameTemp.matches(nameRegex)){
+					if(!haveThisUser(userNameTemp)){  //判断该用户是否存在
+						inputFlag = false;
+					} else {
+						System.out.println("亲,该用户已存在,请重新输入用户名....");
+						input_user_name = new Scanner(System.in);  //清空输入缓存区
+					}
 				} else {
-					System.out.println("亲,该用户已存在,请重新输入用户名....");
+					System.out.println("亲,输入不合法哦,请重新输入....");
 					input_user_name = new Scanner(System.in);  //清空输入缓存区
 				}
-			} else {
-				System.out.println("亲,输入不合法哦,请重新输入....");
-				input_user_name = new Scanner(System.in);  //清空输入缓存区
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				input_user_name = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
+				input_user_name = new Scanner(System.in);
 			}
+			
 		}
 		return userNameTemp;
 	}
@@ -493,6 +571,7 @@ public class User implements Cloneable{
 	 * 让用户输入显示名
 	 * @return 返回用户输入的正确的显示名
 	 */
+	@SuppressWarnings("resource")
 	public static String inputUserDisplayName(){
 		String userNameTemp = null;
 		//[\s\S]*   可以匹配任意字符
@@ -502,14 +581,26 @@ public class User implements Cloneable{
 		System.out.println("请输入显示名");
 		System.out.println("显示名可以包含任意字符，但是最小只能为 3 个字符，最长可以为 20 个字符");
 		while(inputFlag){
-			userNameTemp = input_user_name.nextLine();
-			if(userNameTemp.length() >= 3 && userNameTemp.length() <= 20){
-				inputFlag = false;
-				System.out.println("输入显示名格式符合要求~~");
-			} else {
-				System.out.println("亲,输入不合法哦,请重新输入....");
-				input_user_name = new Scanner(System.in);  //清空输入缓存区
+			try{
+				userNameTemp = input_user_name.nextLine();
+				if(userNameTemp.length() >= 3 && userNameTemp.length() <= 20){
+					inputFlag = false;
+					System.out.println("输入显示名格式符合要求~~");
+				} else {
+					System.out.println("亲,输入不合法哦,请重新输入....");
+					input_user_name = new Scanner(System.in);  //清空输入缓存区
+				}
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				input_user_name = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
+				input_user_name = new Scanner(System.in);
 			}
+			
 		}
 		return userNameTemp;
 	}
@@ -518,23 +609,36 @@ public class User implements Cloneable{
 	 * 让用户输入邮箱 
 	 * @return 返回用户输入的符合要求的邮箱
 	 */
+	@SuppressWarnings("resource")
 	public static String inputUserEmail() {
 		// 邮箱必须符合邮箱格式，最长不能超过 50 个字符 \. 点字符 + >=1次
 		String regexEmail = "[_a-zA-Z0-9]+@[0-9a-zA-Z]+(\\.[a-zA-Z]+)+";
 		String userEmailTemp = null;
 		System.out.println("请输入您的邮箱:");
-		Scanner input_password = new Scanner(System.in);
+		Scanner input_Email = new Scanner(System.in);
 		boolean inputFlag = true;
 		while (inputFlag) {
-			userEmailTemp = input_password.nextLine();
-			if (userEmailTemp.matches(regexEmail)
-					&& userEmailTemp.length() <= 50) {
-				System.out.println("您输入的邮箱格式正确~");
-				inputFlag = false;
-			} else {
-				System.out.println("亲,您输入的邮箱格式有误,请重新输入,谢谢~");
-				input_password = new Scanner(System.in);
+			try{
+				userEmailTemp = input_Email.nextLine();
+				if (userEmailTemp.matches(regexEmail)
+						&& userEmailTemp.length() <= 50) {
+					System.out.println("您输入的邮箱格式正确~");
+					inputFlag = false;
+				} else {
+					System.out.println("亲,您输入的邮箱格式有误,请重新输入,谢谢~");
+					input_Email = new Scanner(System.in);
+				}
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				input_Email = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
+				input_Email = new Scanner(System.in);
 			}
+			
 		}
 
 		return userEmailTemp;
@@ -674,5 +778,39 @@ public class User implements Cloneable{
 		return sum;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if(this == other){
+			return true;
+		}
+		if(other == null){
+			return false;
+		}
+		if( !(other instanceof User) ){
+			return false;
+		}
+		final User user = (User)other;
+		if( !getUserName().equals(user.getUserName()) ){
+			return false;
+		}
+		return true;
+	}
+
+	
+	/**
+	 * 获取该用户的日记列表
+	 * @return
+	 */
+	public List<Diary> getOwnDiaries() {
+		return ownDiaries;
+	}
+	
+	/**
+	 * 设置该用户的日记列表
+	 * @param ownDiaries
+	 */
+	public void setOwnDiaries(List<Diary> ownDiaries) {
+		this.ownDiaries = ownDiaries;
+	}
 	
 }

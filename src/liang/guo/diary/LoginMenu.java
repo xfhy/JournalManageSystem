@@ -20,7 +20,7 @@ public class LoginMenu {
 	
 	
 	public LoginMenu(){
-		test();
+		//test();
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class LoginMenu {
 		
 		User.showRegistrationProblem();  //显示用户注册时需要回答的问题
 		System.out.println("请输入您的选择:");
-		userTemp.setUserChooseProblem(Utility.judgmentInput(5));     //让用户选择 1-5,哪个问题
+		userTemp.setUserChooseProblem(Utility.judgmentInput(5)-1);     //让用户选择 1-5,哪个问题
 		userTemp.setUserQuestionAnswer(User.inputQuestionAnswer());       //让用户输入需要回答哪个密码提示问题,并让用户输入该问题的答案
 		
 		int numberOfInput = 5;  //允许用户输入的次数
@@ -91,14 +91,13 @@ public class LoginMenu {
 				++errorTimes;   //错误则错误次数+1
 			}
 		}
-		if(errorTimes != 5 && User.haveThisUser(userTemp.getUserName())==-1){
+		if(errorTimes != 5 && !User.haveThisUser(userTemp.getUserName())){
 			System.out.println("回答正确");
-			userTemp.setHowManyPeopleLogin(Journal.howManyPeople); //设置当前用户在数组中的索引
 			
 			System.out.println("\n\t恭喜!注册成功,您的信息如下:");
 			System.out.println(userTemp);
 			//showRegiSuccUser();      //显示用户注册的信息
-			Journal.getAllUserInfo()[Journal.howManyPeople] = userTemp;
+			Journal.getAllUserInfo().add(userTemp);   //注册时,将日记存为null
 			Journal.howManyPeople++;   //注册成功,人数+1
 			
 		} else {
@@ -110,21 +109,7 @@ public class LoginMenu {
 		
 	}
 	
-	/**
-	 * 为了测试方便,加入了一个测试用户
-	 */
-	public void test(){
-		User userTemp = new User();
-		userTemp.setUserName("xfhy666");
-		userTemp.setUserDisplayName("xfhy");
-		userTemp.setUserPassword("qwert;123");
-		userTemp.setUserMailBox("123456789@qq.com");
-		userTemp.setUserChooseProblem(1);
-		userTemp.setUserQuestionAnswer("xfhy");
-		userTemp.setHowManyPeopleLogin(Journal.howManyPeople);
-		Journal.getAllUserInfo()[Journal.howManyPeople] = userTemp;
-		Journal.howManyPeople++;
-	}
+
 	
 	/**
 	 * 用户登录
@@ -140,7 +125,10 @@ public class LoginMenu {
 		if(Journal.isLogin){  //判断,如果登录成功,则退出当前登录菜单
 			exitFalg = true;
 			System.out.println("\n\t恭喜!登录成功!\n");
-			
+			int userIndex = User.getUserIndexByName(loginName);
+			if(userIndex != -1){
+				Journal.currentUser = Journal.getAllUserInfo().get(userIndex);
+			}
 		} else {   //登录失败
 			System.err.println("登录失败~用户名或密码错误");
 		}

@@ -1,5 +1,7 @@
 package liang.guo.diary.operation;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import liang.guo.diary.enumerate.MoodType;
@@ -19,7 +21,7 @@ public class KeepDiary {
 	/**
 	 * 开始写日记
 	 */
-	public void writeDiary(){
+	public void writeDiary(String userName,List<Diary> diaryList){
 		WeatherType weather;  //天气
 		MoodType mood;        //心情
 		Date date;            //日期
@@ -39,9 +41,13 @@ public class KeepDiary {
 		diary.setDate(date);
 		diary.setTitle(title);
 		diary.setContent(content);
-		System.out.println("日记已记录成功!");
-		System.out.println(diary.toString());
+		
+		if(diaryList.add(diary)){
+			System.out.println("日记已记录成功!");
+			System.out.println(diary.toString());
+		}
 	}
+	
 	
 	/**
 	 * 显示所有天气类型
@@ -57,6 +63,7 @@ public class KeepDiary {
 		System.out.println("5.雾 FOG");
 		System.out.println("6.雪 SNOW");
 	}
+	
 	
 	/**
 	 * 选择天气
@@ -86,6 +93,7 @@ public class KeepDiary {
 		return WeatherType.SUNNY;   //默认是晴天
 	}
 	
+	
 	/**
 	 * 显示所有的心情类型
 	 */
@@ -101,6 +109,7 @@ public class KeepDiary {
 		System.out.println("6.欣喜 DELIGHTED");
 	}
 
+	
 	/**
 	 * 选择心情
 	 * @return
@@ -129,57 +138,97 @@ public class KeepDiary {
 		return MoodType.HAPPY;     //默认是高兴
 	}
 	
+	
 	/**
 	 * 让用户输入日期
 	 * @return
 	 */
+	@SuppressWarnings("resource")
 	private String inputDate(){
 		System.out.println("请输入日期(格式为dddd-dd-dd eg: 1991-06-08):");
 		Scanner inputDateScanner = new Scanner(System.in);
 		String dateValue = "";
 		boolean inputFlag = true;
 		while(inputFlag){
-			dateValue = inputDateScanner.nextLine();
-			if(Date.inputIsDate(dateValue)){  //判断输入的日期是否正确
-				inputFlag = false;
-			} else {
-				System.out.println("输入不合法,请输入正确的日期,请重新输入:");
+			try{
+				dateValue = inputDateScanner.nextLine();
+				if(Date.inputIsDate(dateValue)){  //判断输入的日期是否正确
+					inputFlag = false;
+				} else {
+					System.out.println("输入不合法,请输入正确的日期,请重新输入:");
+					inputDateScanner = new Scanner(System.in);
+				}
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				inputDateScanner = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
 				inputDateScanner = new Scanner(System.in);
 			}
 		}
 		return dateValue;
 	}
 	
+	
 	/**
 	 * 让用户输入标题
 	 * @return
 	 */
+	@SuppressWarnings("resource")
 	private String inputTitle(){
 		System.out.println("请输入标题(12字以内):");
 		Scanner inputTitleScanner = new Scanner(System.in);
 		String title = "";
 		boolean inputFalg = true;
 		while(inputFalg){
-			title = inputTitleScanner.nextLine();
-			if(title.length() <= 12 && title.length() > 0){
-				inputFalg = false;
-			} else {
-				System.out.println("输入不合法,标题长度超过12字或为0,请重新输入:");
+			try{
+				title = inputTitleScanner.nextLine();
+				if(title.length() <= 12 && title.length() > 0){
+					inputFalg = false;
+				} else {
+					System.out.println("输入不合法,标题长度超过12字或为0,请重新输入:");
+					inputTitleScanner = new Scanner(System.in);
+				}
+			} catch (NoSuchElementException e){
+				System.err.println(e.getMessage());
+				System.err.println("没有输入哦,请重新输入");
+				inputTitleScanner = new Scanner(System.in);
+				
+			} catch (Exception e2){
+				e2.printStackTrace();
+				System.err.println("输入时发生异常,请重新输入");
 				inputTitleScanner = new Scanner(System.in);
 			}
 		}
 		return title;
 	}
 	
+	
 	/**
 	 * 让用户输入日记内容
 	 * @return
 	 */
+	@SuppressWarnings("resource")
 	private String inputContent(){
 		System.out.println("请输入日记内容:");
 		Scanner inputContentScanner = new Scanner(System.in);
 		String content = inputContentScanner.nextLine();
 		return content;
 	}
+	
+	/**
+	 * 根据传入的用户名,将该用户的日记插入到集合中
+	 * @return  插入是否成功
+	 */
+	@SuppressWarnings("unused")
+	private boolean introduceAggregate(String userName,Diary diary){
+		boolean successFlag = false;
+		
+		return successFlag;
+	}
+	
 	
 }
