@@ -3,6 +3,10 @@ package liang.guo.diary;
 import java.util.ArrayList;
 import java.util.List;
 
+import liang.guo.diary.enumerate.MoodType;
+import liang.guo.diary.enumerate.WeatherType;
+import liang.guo.diary.model.Date;
+import liang.guo.diary.model.Diary;
 import liang.guo.diary.model.User;
 
 
@@ -90,6 +94,34 @@ public class Journal {
 		userTemp.setUserMailBox("123456789@qq.com");
 		userTemp.setUserChooseProblem(0);
 		userTemp.setUserQuestionAnswer("xfhy");
+		
+		Diary diary1 = new Diary();
+		diary1.setMood(MoodType.DELIGHTED);
+		diary1.setWeather(WeatherType.CLOUDY);
+		diary1.setTitle("你好啊");
+		diary1.setContent("这是内容");
+		diary1.setDate(new Date("2012-12-12"));
+		
+		Diary diary2 = new Diary();
+		diary2.setMood(MoodType.DEPRESSED);
+		diary2.setWeather(WeatherType.FOG);
+		diary2.setTitle("Hello");
+		diary2.setContent("这是内容............................");
+		diary2.setDate(new Date("2001-02-02"));
+		
+		Diary diary3 = new Diary();
+		diary3.setMood(MoodType.EXCITEMENT);
+		diary3.setWeather(WeatherType.OVERCAST);
+		diary3.setTitle("World");
+		diary3.setContent("哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈");
+		diary3.setDate(new Date("2007-07-06"));
+		
+		List<Diary> ownDiaries = new ArrayList<>();
+		ownDiaries.add(diary1);
+		ownDiaries.add(diary2);
+		ownDiaries.add(diary3);
+		
+		userTemp.setOwnDiaries(ownDiaries);
 		Journal.getAllUserInfo().add(userTemp);
 		Journal.howManyPeople++;
 	}

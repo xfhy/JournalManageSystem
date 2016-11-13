@@ -1,5 +1,8 @@
 package liang.guo.diary.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * 日期类
  * 2016年10月18日 下午9:17:33
@@ -8,7 +11,7 @@ package liang.guo.diary.model;
  * 用来表示日期
  * 
  */
-public class Date {
+public class Date implements Comparable<Date>{
 	/*
 	 *该类应该包含一个通过字符串构造的日期函数Date(String date)，
             还应该包含一个 static 方法用来判断用户输入的日期是否正确，在构造日期之前先用该方法判断日期是否合法 
@@ -77,6 +80,41 @@ public class Date {
 	@Override
 	public String toString() {
 		return date;
+	}
+
+	/**
+	 * 返回日期信息
+	 * @return
+	 */
+	public String getDate() {
+		return date;
+	}
+
+	/**
+	 * 可以比较的   日期
+	 * 比较此对象与指定对象的顺序。如果该对象小于、等于或大于指定对象，则分别返回负整数、零或正整数。 
+	 * 还有个方法叫before():测试此日期是否在指定日期之前,但是在这里不适用,因为时间可能相等.
+	 */
+	@Override
+	public int compareTo(Date when) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		try{
+			java.util.Date dt1 = df.parse(date);
+			java.util.Date dt2 = df.parse(when.getDate());
+			
+			//比较时间
+			if(dt1.getTime() < dt2.getTime()){  //返回自 1970 年 1 月 1 日 00:00:00 GMT 以来此 Date 对象表示的毫秒数。 
+				return -1;
+			} else if(dt1.getTime() > dt2.getTime()){
+				return 1;
+			} else {
+				return 0;
+			}
+		} catch (Exception e){
+			System.err.println("日期比较时出错");
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 }

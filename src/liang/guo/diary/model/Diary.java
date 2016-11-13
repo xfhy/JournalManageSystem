@@ -33,6 +33,10 @@ public class Diary {
 	 */
 	private String content;
 	
+	/**
+	 * 返回日期对象
+	 * @return
+	 */
 	public Date getDate() {
 		return date;
 	}

@@ -1,6 +1,7 @@
 package liang.guo.diary;
 
 import liang.guo.diary.operation.KeepDiary;
+import liang.guo.diary.operation.SeeDiary;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -13,8 +14,14 @@ import liang.guo.diary.util.Utility;
  */
 public class Menu {
 
-	private boolean exitFalg = false;  //退出?
-	private String menuName = "主菜单";   //菜单名字     控制当前显示哪一级菜单
+	/*
+	 * 退出?
+	 */
+	private boolean exitFalg = false; 
+	/**
+	 * 菜单名字     控制当前显示哪一级菜单
+	 */
+	private String menuName = "主菜单";   
 	private String mainMenuName = "主菜单";   
 	private String findDiaryMainMenu = "查找日记主菜单";
 	
@@ -86,9 +93,9 @@ public class Menu {
 	}
 	
 	/**
-	 * 查找日记菜单
+	 * 查找日记菜单    先放着以后有用
 	 */
-	public void showFindDiary() {
+	/*public void showFindDiary() {
 		menuName = findDiaryMainMenu;
 		System.out.println("1. 按标题查找；");
 		System.out.println("2. 按内容查找；");
@@ -121,6 +128,37 @@ public class Menu {
 			System.out.println("噫,没有这个选项");
 			break;
 		}
+	}*/
+	
+	/**
+	 * 查找日记菜单    
+	 */
+	public void showFindDiary() {
+		menuName = findDiaryMainMenu;
+		System.out.println("1. 查看日记列表");
+		System.out.println("2. 返回上一层菜单");
+		System.out.println("请选择(1~2)：");
+		int userSelection = Utility.judgmentInput(2);     //让用户输入选择
+		switch (userSelection) {
+		case 1:
+			showDiaryList();
+			break;
+		case 2:
+			menuName = mainMenuName;
+			break;
+		default:
+			System.out.println("噫,没有这个选项");
+			break;	
+		}
+	}
+	
+	/**
+	 * 查看日记列表
+	 */
+	public void showDiaryList(){
+		SeeDiary seeDiary = new SeeDiary();
+		seeDiary.viewJournalsListByDate();
+		seeDiary.showDiaryByIndex();
 	}
 	
 	/**
@@ -152,13 +190,6 @@ public class Menu {
 		System.out.println("\t\t正在执行写日记\t\t");
 		KeepDiary writeDiary = new KeepDiary();
 		writeDiary.writeDiary(Journal.currentUser.getUserName(),Journal.currentUser.getOwnDiaries());
-	}
-	
-	/**
-	 * 查找日记
-	 */
-	public void findDiary(){
-		System.out.println("\t\t正在执行查找日记\t\t");
 	}
 	
 	/**
