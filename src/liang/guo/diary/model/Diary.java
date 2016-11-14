@@ -1,5 +1,7 @@
 package liang.guo.diary.model;
 
+import java.io.Serializable;
+
 import liang.guo.diary.enumerate.MoodType;
 import liang.guo.diary.enumerate.WeatherType;
 
@@ -11,7 +13,11 @@ import liang.guo.diary.enumerate.WeatherType;
  *  Diary 类应该至少包含这些属性：日期、天气、心情、标题和内容
  * 
  */
-public class Diary {
+public class Diary implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8871500024376654702L;
 	/**
 	 * 日期
 	 */

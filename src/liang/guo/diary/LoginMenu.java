@@ -97,9 +97,11 @@ public class LoginMenu {
 			System.out.println("\n\t恭喜!注册成功,您的信息如下:");
 			System.out.println(userTemp);
 			//showRegiSuccUser();      //显示用户注册的信息
-			Journal.getAllUserInfo().add(userTemp);   //注册时,将日记存为null
+			Journal.getAllUserInfo().add(userTemp);   
 			Journal.howManyPeople++;   //注册成功,人数+1
-			
+			if(Journal.saveUserCountsToFile() && Journal.saveUserToFile()){
+				System.out.println("用户信息保存成文件成功");
+			}
 		} else {
 			System.err.println("\n亲,您已经5次回答问题错误啦,建议您需要回去狂补一下小学数学....\n");
 			

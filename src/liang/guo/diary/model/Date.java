@@ -1,5 +1,6 @@
 package liang.guo.diary.model;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -11,7 +12,11 @@ import java.text.SimpleDateFormat;
  * 用来表示日期
  * 
  */
-public class Date implements Comparable<Date>{
+public class Date implements Comparable<Date>,Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1635986082344938512L;
 	/*
 	 *该类应该包含一个通过字符串构造的日期函数Date(String date)，
             还应该包含一个 static 方法用来判断用户输入的日期是否正确，在构造日期之前先用该方法判断日期是否合法 

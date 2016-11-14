@@ -9,7 +9,7 @@ import liang.guo.diary.util.Utility;
  * 
  * 主菜单
  * 
- * @author 郭亮
+ * @author XFHY
  * 
  */
 public class Menu {

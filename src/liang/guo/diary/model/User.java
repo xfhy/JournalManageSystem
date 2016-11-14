@@ -1,5 +1,6 @@
 package liang.guo.diary.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,7 +24,11 @@ import liang.guo.diary.util.Utility;
 1.4. 在主类中添加一个 static 属性用来判断用户是否登录，以及保存当前登录的用户信息
  * 
  */
-public class User implements Cloneable{
+public class User implements Cloneable,Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6434352159756086863L;
 	/**
 	 * 存放用户姓名
 	 */
