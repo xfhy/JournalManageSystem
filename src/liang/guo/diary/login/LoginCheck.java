@@ -30,10 +30,10 @@ public class LoginCheck {
 	
 	
 	/**
-	 * 
-	 * @param name
-	 * @param passwrd
-	 * @return
+	 * 判断登录是否成功
+	 * @param name 用户名
+	 * @param passwrd 密码
+	 * @return 返回3种状态 1:登录成功,找到了合法的用户     0:不是合法用户      -1:连数据库都没有连接成功
 	 */
 	public static int isSucceed(String name,String passwrd){
 		Icon icon;
