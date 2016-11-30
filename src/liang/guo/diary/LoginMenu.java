@@ -97,9 +97,9 @@ public class LoginMenu {
 			System.out.println("\n\t恭喜!注册成功,您的信息如下:");
 			System.out.println(userTemp);
 			//showRegiSuccUser();      //显示用户注册的信息
-			Journal.getAllUserInfo().add(userTemp);   
+			Utility.getAllUserInfo().add(userTemp);   
 			Journal.howManyPeople++;   //注册成功,人数+1
-			if(Journal.saveUserCountsToFile() && Journal.saveUserToFile()){
+			if(Utility.saveUserCountsToFile() && Utility.saveUserToFile()){
 				System.out.println("用户信息保存成文件成功");
 			}
 		} else {
@@ -122,14 +122,14 @@ public class LoginMenu {
 		loginName = User.getInputUserName();   //获取用户登录时输入的登录名
 		System.out.println("请输入密码:");
 		loginPassword = User.getInputUserPassword();  //获取用户登录时输入的密码
-		Journal.isLogin = Journal.currentUser.loginJudgmen(loginName, loginPassword);   //判断登录是否成功   成功则标记用户成功登录
+		Journal.isLogin = Utility.currentUser.loginJudgmen(loginName, loginPassword);   //判断登录是否成功   成功则标记用户成功登录
 		
 		if(Journal.isLogin){  //判断,如果登录成功,则退出当前登录菜单
 			exitFalg = true;
 			System.out.println("\n\t恭喜!登录成功!\n");
 			int userIndex = User.getUserIndexByName(loginName);
 			if(userIndex != -1){
-				Journal.currentUser = Journal.getAllUserInfo().get(userIndex);
+				Utility.currentUser = Utility.getAllUserInfo().get(userIndex);
 			}
 		} else {   //登录失败
 			System.err.println("登录失败~用户名或密码错误");

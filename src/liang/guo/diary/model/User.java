@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Scanner;
 
-import liang.guo.diary.Journal;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -72,7 +71,7 @@ public class User implements Cloneable,Serializable{
 		boolean isRealUsers = false;
 		
 		//遍历List(所有用户)集合
-		for(User user : Journal.getAllUserInfo()){
+		for(User user : Utility.getAllUserInfo()){
 			//如果用户名和密码都与库中的用户信息对的上,则说明登录成功
 			if(user.getUserName().equals(loginName) && 
 					user.getUserPassword().equals(loginPassword)){
@@ -332,7 +331,7 @@ public class User implements Cloneable,Serializable{
 		boolean userExistence = false;
 
 		//遍历List(所有用户)集合
-		for(User user : Journal.getAllUserInfo()){
+		for(User user : Utility.getAllUserInfo()){
 			//如果名字相同,则存在该用户
 			if(user.getUserName().equals(userName)){
 				userExistence = true;
@@ -356,8 +355,8 @@ public class User implements Cloneable,Serializable{
 		int userIndex = -1;
 		
 		//遍历List(所有用户)集合
-		for (int i = 0; i < Journal.getAllUserInfo().size(); i++) {
-			if(Journal.getAllUserInfo().get(i).getUserName().equals(userName)){
+		for (int i = 0; i < Utility.getAllUserInfo().size(); i++) {
+			if(Utility.getAllUserInfo().get(i).getUserName().equals(userName)){
 				userIndex = i;
 			}
 		}
@@ -375,9 +374,9 @@ public class User implements Cloneable,Serializable{
 			System.err.println("通过用户名获取用户时,传入用户名为空");
 			return null;
 		}
-		for (int i = 0; i < Journal.getAllUserInfo().size(); i++) {
-			if(Journal.getAllUserInfo().get(i).getUserName().equals(userName)){
-				return Journal.getAllUserInfo().get(i);
+		for (int i = 0; i < Utility.getAllUserInfo().size(); i++) {
+			if(Utility.getAllUserInfo().get(i).getUserName().equals(userName)){
+				return Utility.getAllUserInfo().get(i);
 			}
 		}
 		return null;

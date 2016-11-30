@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import liang.guo.diary.Journal;
 import liang.guo.diary.comparator.DateComparator;
 import liang.guo.diary.model.Diary;
 import liang.guo.diary.util.Utility;
@@ -24,10 +23,10 @@ public class SeeDiary {
 	 */
 	public void viewJournalsListByDate(){
 		Set<Diary> diarySet = new TreeSet<>(new DateComparator());
-		diarySet.addAll(Journal.currentUser.getOwnDiaries());   //将当前用户所有的日记添加到treeSet中,(按照日期排序)
+		diarySet.addAll(Utility.currentUser.getOwnDiaries());   //将当前用户所有的日记添加到treeSet中,(按照日期排序)
 		
-		Journal.currentUser.getOwnDiaries().clear();
-		Journal.currentUser.getOwnDiaries().addAll(diarySet);
+		Utility.currentUser.getOwnDiaries().clear();
+		Utility.currentUser.getOwnDiaries().addAll(diarySet);
 		
 		//列出所有日记的标题和日期
 		Iterator<Diary> it = diarySet.iterator();
@@ -50,7 +49,7 @@ public class SeeDiary {
 		int userSelection = Utility.judgmentInput(diarySerialNumber+1);
 		try {
 			System.out.println(
-					Journal.currentUser.getOwnDiaries().get(userSelection-1).toString());
+					Utility.currentUser.getOwnDiaries().get(userSelection-1).toString());
 		} catch (Exception e) {
 			System.err.println("用户选择日记的序号后,数组下标越界");
 			e.printStackTrace();

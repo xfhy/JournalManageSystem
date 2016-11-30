@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import liang.guo.diary.Journal;
 import liang.guo.diary.enumerate.MoodType;
 import liang.guo.diary.enumerate.WeatherType;
 import liang.guo.diary.model.Date;
@@ -46,7 +45,7 @@ public class KeepDiary {
 		if(diaryList.add(diary)){
 			System.out.println("日记已记录成功!");
 			System.out.println(diary.toString());
-			if(Journal.saveUserToFile()){
+			if(Utility.saveUserToFile()){
 				System.out.println("日记已保存文件成功");
 			}
 		}
