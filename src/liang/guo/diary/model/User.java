@@ -47,7 +47,7 @@ public class User implements Cloneable,Serializable{
 	/**
 	 * 注册时需要用户选择回答的密码提示问题
 	 */
-	public final static String verificationProblem[] = {"1.你是谁?","2.你来自哪里?",
+	public final static String VERIFICATIONPROBLEM[] = {"1.你是谁?","2.你来自哪里?",
 		"3.你想去哪里?","4.你想干什么?","5.你能干什么?"};
 	/**
 	 * 存放用户选择的问题索引
@@ -193,7 +193,7 @@ public class User implements Cloneable,Serializable{
 	 * @param userChooseProblem
 	 */
 	public void setUserChooseProblem(int userChooseProblem) throws IllegalArgumentException{
-		if(userChooseProblem < 0 || userChooseProblem >= User.verificationProblem.length){
+		if(userChooseProblem < 0 || userChooseProblem >= User.VERIFICATIONPROBLEM.length){
 			/*----------------------2016年10月30日11:01:01   断点------------------------------------*/
 			System.err.println("设置用户选择的密码验证问题索引时传入参数非法(传入索引不在1~5)");
 			throw new IllegalArgumentException("设置用户选择的密码验证问题索引时传入参数非法(传入索引不在1~5)");
@@ -259,7 +259,7 @@ public class User implements Cloneable,Serializable{
 		temp.append("显示名: "+this.userDisplayName+"\n");
 		temp.append("密码: "+this.userPassword+"\n");
 		temp.append("邮箱: "+this.userMailBox+"\n");
-		temp.append("用户选择的密码验证问题: "+User.verificationProblem[this.userChooseProblem]+"\n");
+		temp.append("用户选择的密码验证问题: "+User.VERIFICATIONPROBLEM[this.userChooseProblem]+"\n");
 		temp.append("用户的密码验证问题答案: "+this.userQuestionAnswer+"\n");
 		
 		return temp.toString();
@@ -431,8 +431,8 @@ public class User implements Cloneable,Serializable{
 	 */
 	public static void showRegistrationProblem(){
 		System.out.println("请从下面 5 个密码提示问题中选择一个，并填写答案，答案不能为空");
-		for (int i = 0; i < User.verificationProblem.length; i++) {
-			System.out.println(User.verificationProblem[i]);
+		for (int i = 0; i < User.VERIFICATIONPROBLEM.length; i++) {
+			System.out.println(User.VERIFICATIONPROBLEM[i]);
 		}
 	}
 	
@@ -815,6 +815,38 @@ public class User implements Cloneable,Serializable{
 	 */
 	public void setOwnDiaries(List<Diary> ownDiaries) {
 		this.ownDiaries = ownDiaries;
+	}
+	
+	/**
+	 * 判断此密码是否符合要求
+	 * @param passwordTemp
+	 * @return
+	 */
+	public static boolean isCurrentPassword(String passwordTemp) {
+		// 正则表达式
+		String regexLetter = ".*[a-zA-Z]+.*"; // 字母
+		String regexNumber = ".*[0-9]+.*"; // 数字
+		String regexSpecialChar = ".*[\\p{Punct}]+.*"; // 特殊字符
+		String regexChinese = ".*[\u4e00-\u9fa5]+.*"; // 汉字
+		if(passwordTemp.matches(regexLetter) 
+				&& passwordTemp.matches(regexNumber)
+				&& passwordTemp.matches(regexSpecialChar)
+				&& !passwordTemp.matches(regexChinese)
+				&& passwordTemp.length() >= 8
+				&& passwordTemp.length() <= 30){
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isCurrentEmail(String emailTemp){
+		// 邮箱必须符合邮箱格式，最长不能超过 50 个字符 \. 点字符 + >=1次
+		String regexEmail = "[_a-zA-Z0-9]+@[0-9a-zA-Z]+(\\.[a-zA-Z]+)+";
+		if(emailTemp.matches(regexEmail) && regexEmail.length()<=50){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

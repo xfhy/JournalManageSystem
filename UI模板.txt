@@ -1,0 +1,68 @@
+public class Test extends JFrame{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	JFrame mainFrame = new JFrame("测试");
+	public Test(){
+		init();
+	}
+	
+	/**
+	 * 初始化
+	 */
+	public void init(){
+		mainFrame.add(new JButton("wocao"),BorderLayout.EAST);
+		mainFrame.setSize(400, 400);    //自适应控件的大小
+	}
+	
+	/**
+	 * 显示UI
+	 */
+	public void showUI(){
+		
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setVisible(true);  //设置JFrame可见
+	}
+	
+	/**
+	 * 主函数
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		//InitGlobalFont(new Font(UICons.FONT_TYPE, Font.PLAIN, UICons.FONT_SIZE));  
+		InitGlobalFont(new Font(Font.SANS_SERIF,Font.PLAIN,15));  
+        try {  
+            org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
+            
+            //这句是更换主题
+            BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.
+            		FrameBorderStyle.translucencyAppleLike;  
+            
+            org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
+            UIManager.put("RootPane.setupButtonVisible", false);  
+            //BeautyEyeLNFHelper.translucencyAtFrameInactive = false;  
+            //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());  
+        } catch (Exception e) {  
+            System.err.println("set skin fail!");  
+        }  
+          
+    
+		new Test().showUI();
+	}
+	
+	/**
+	 * 初始化字体
+	 * @param font
+	 */
+	private static void InitGlobalFont(Font font) {  
+        FontUIResource fontRes = new FontUIResource(font);  
+        for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {  
+            Object key = keys.nextElement();  
+            Object value = UIManager.get(key);  
+            if (value instanceof FontUIResource) {  
+                UIManager.put(key, fontRes);  
+            }  
+        }  
+    }  
+}

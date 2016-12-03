@@ -12,8 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +31,8 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.mylistener.MyKeyListener;
+import liang.guo.diary.register.RegisteredJournalSystem;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -127,7 +131,7 @@ public class LoginJournalSystem {
 	 * 测试用
 	 */
 	public void test(){
-		accountNumberTextField.setText("xfhy666");
+		accountNumberTextField.setText("xfhy8888");
 		passwordTextField.setText("qwert;123");
 		passwordTextField.setEchoChar('●');
 	}
@@ -138,6 +142,8 @@ public class LoginJournalSystem {
 	public void initAllBtn(){
 		registeredAccountBtn.setContentAreaFilled(false);   //去掉外面那层样式,现在这个按钮就像文本一样
 		retrievePasswordBtn.setContentAreaFilled(false);   //去掉外面那层样式,现在这个按钮就像文本一样
+		rememberPasswordCheckBox.setContentAreaFilled(false);
+		automaticLogonCheckBox.setContentAreaFilled(false);
 		accountNumberTextField.setText(ACCOUNTINFO);       //设置账号输入框的提示文字
 		passwordTextField.setText(PASSWORDINFO);           //设置密码输入框的提示文字
 		passwordTextField.setEchoChar('\0');     //设置明文显示文字
@@ -146,12 +152,27 @@ public class LoginJournalSystem {
 		registeredAccountBtn.setForeground(Color.BLUE);
 		retrievePasswordBtn.setForeground(Color.BLUE);
 		
+		//设置注册账号,找回密码  按钮  监听器
+		registeredAccountBtn.addActionListener(new RegisteredAccountBtnListener());
+		retrievePasswordBtn.addActionListener(new RetrievePasswordBtnListener());
+		
 		//设置输入框的焦点  监听器
 		accountNumberTextField.addFocusListener(new InputAccountFocusListener());
 		passwordTextField.addFocusListener(new InputPasswordFocusListener());
 		
 		//设置登录按钮监听器
 		loginBtn.addActionListener(new LoginBtnActionListener());  
+		
+		/*-----------设置enter键监听-----------*/
+		//按下enter即登录
+		EnterKeyListener enterKeyListener = new EnterKeyListener();
+		mainFrame.addKeyListener(enterKeyListener);
+		aboveBackground.addKeyListener(enterKeyListener);
+		accountNumberTextField.addKeyListener(enterKeyListener);
+		passwordTextField.addKeyListener(enterKeyListener);
+		rememberPasswordCheckBox.addKeyListener(enterKeyListener);
+		automaticLogonCheckBox.addKeyListener(enterKeyListener);
+		loginBtn.addKeyListener(enterKeyListener);
 	}
 	
 	/**
@@ -320,27 +341,82 @@ public class LoginJournalSystem {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String name = accountNumberTextField.getText();
-			String password = new String(passwordTextField.getPassword());
-			
-			     /*----------------检查是否登录成功---------------*/
-			int isLoginSuccess = LoginCheck.CONNECTTODATABASEFAILED;    //是否登录成功
-			if(!name.equals(ACCOUNTINFO) && !password.equals(PASSWORDINFO)){
-				isLoginSuccess = LoginCheck.isSucceed(name, password);   //去判断是否成功成功
-			} else {
-				Icon icon = new ImageIcon("image/dialog/警告.png");
-				JOptionPane.showMessageDialog(null, "请输入账号和密码再进行登录", "登录失败",
-						JOptionPane.WARNING_MESSAGE, icon);
+			loginProcess();  //判读用户是否为正确的用户
+		}
+		
+	}
+	
+	
+	/**
+	 * 判读用户是否为正确的用户
+	 * 用户点击了登录按钮或者按下enter键   则执行下面的
+	 */
+	public void loginProcess() {
+		String name = accountNumberTextField.getText();
+		String password = new String(passwordTextField.getPassword());
+		
+		     /*----------------检查是否登录成功---------------*/
+		int isLoginSuccess = LoginCheck.CONNECTTODATABASEFAILED;    //是否登录成功
+		if(!name.equals(ACCOUNTINFO) && !password.equals(PASSWORDINFO)){
+			isLoginSuccess = LoginCheck.isSucceed(name, password);   //去判断是否成功成功
+		} else {
+			Icon icon = new ImageIcon("image/dialog/警告.png");
+			JOptionPane.showMessageDialog(null, "请输入账号和密码再进行登录", "登录失败",
+					JOptionPane.WARNING_MESSAGE, icon);
+		}
+		
+		//登录成功
+		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
+			// TODO Auto-generated method stub
+			System.out.println("登录成功");
+		} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户
+			// TODO Auto-generated method stub
+			System.out.println("不是合法用户");
+		} else if (isLoginSuccess == LoginCheck.CONNECTTODATABASEFAILED){  //连接数据库都没有成功
+			// TODO Auto-generated method stub
+		}
+	}
+	
+	/**
+	 * enter按键  监听器
+	 * @author XFHY
+	 *
+	 */
+	class EnterKeyListener extends MyKeyListener{
+		@Override
+		public void keyPressed(KeyEvent event) {
+			//如果用户按下的是enter键,则执行登录操作
+			if(event.getKeyCode() == KeyEvent.VK_ENTER){
+				loginProcess();  //判断用户是否为正确的用户
 			}
-			
-			//登录成功
-			if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
-				// TODO Auto-generated method stub
-			} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户
-				// TODO Auto-generated method stub
-			} else if (isLoginSuccess == LoginCheck.CONNECTTODATABASEFAILED){  //连接数据库都没有成功
-				// TODO Auto-generated method stub
-			}
+		}
+	}
+	
+	/**
+	 * 注册账号 按钮  监听器
+	 * @author XFHY
+	 *
+	 */
+	class RegisteredAccountBtnListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			new RegisteredJournalSystem().showUI();
+			//mainFrame.dispose();   //关闭当前窗口
+		}
+		
+	}
+	
+	/**
+	 * 找回密码  按钮  监听器
+	 * @author XFHY
+	 *
+	 */
+	class RetrievePasswordBtnListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
 			
 		}
 		

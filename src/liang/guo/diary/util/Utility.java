@@ -114,6 +114,14 @@ public class Utility {
 	}
 
 	/**
+	 * 添加一个User类到所有用户的集合里面去
+	 * @param userTemp
+	 */
+	public static boolean addAllUserInfo(User userTemp){
+		return Utility.allUserInfo.add(userTemp);
+	}
+	
+	/**
 	 * 输出全部的用户信息
 	 */
 	public static void showAllUserInfo(){
@@ -211,7 +219,7 @@ public class Utility {
 	}
 	
 	/**
-	 * 保存用户信息(User)到文件(User.xfhy)中
+	 * 保存所有用户信息(User)到文件(User.xfhy)中
 	 */
 	public static boolean saveUserToFile(){
 		boolean saveSuccess = true;

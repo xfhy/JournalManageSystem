@@ -14,6 +14,9 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.util.BackgroundPanel;
+
+
 /**
  * @author  XFHY
  * @date  2016年11月30日 下午10:31:06
@@ -40,6 +43,14 @@ public class MainPage extends JFrame {
 	JMenuItem exitMenuItem = new JMenuItem("退出");
 	JMenuItem logoffMenuItem = new JMenuItem("注销");
 	
+	/**
+	 * 背景
+	 */
+	BackgroundPanel mainBackGround;
+	
+	/**
+	 * 构造函数
+	 */
 	public MainPage(){
 		init();
 	}
@@ -50,8 +61,12 @@ public class MainPage extends JFrame {
 	public void init(){
 		initAllMenu();   //初始化所有菜单
 		
+		//"image/main/主界面背景.jpg"
+		mainBackGround = new BackgroundPanel(new ImageIcon("image/main/主界面背景.jpg").getImage());
+		this.getContentPane().add(mainBackGround);   //添加背景 布局
+		
 		this.setJMenuBar(mainMenuBar);   //设置菜单栏
-		this.setSize(400, 400);    
+		this.setSize(751, 481);    
 	}
 	
 	/**
@@ -86,6 +101,10 @@ public class MainPage extends JFrame {
 		this.setVisible(true);  //设置JFrame可见
 	}
 	
+	/**
+	 * 主函数
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		InitGlobalFont(new Font(Font.SANS_SERIF,Font.PLAIN,15));  
         try {  
@@ -106,6 +125,10 @@ public class MainPage extends JFrame {
 		new MainPage().showUI();
 	}
 
+	/**
+	 * 初始化字体
+	 * @param font
+	 */
 	private static void InitGlobalFont(Font font) {  
         FontUIResource fontRes = new FontUIResource(font);  
         for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {  
