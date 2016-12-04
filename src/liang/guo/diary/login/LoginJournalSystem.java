@@ -15,7 +15,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,6 +32,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.mylistener.MyKeyListener;
 import liang.guo.diary.register.RegisteredJournalSystem;
+import liang.guo.diary.retripasw.RetrievePasswordWindow;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -416,8 +416,7 @@ public class LoginJournalSystem {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
+			new RetrievePasswordWindow().showUI();
 		}
 		
 	}

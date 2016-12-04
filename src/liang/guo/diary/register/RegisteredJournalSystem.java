@@ -26,7 +26,6 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
-import liang.guo.diary.Journal;
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
 import liang.guo.diary.mylistener.MyMouseListener;

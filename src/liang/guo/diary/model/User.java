@@ -391,7 +391,7 @@ public class User implements Cloneable,Serializable{
 		System.out.println("请输入您的用户名:");
 		String userNameTemp = User.getInputUserName();   //获取用户输入的用户名
 		
-		User user = getUserByName(userNameTemp);
+		User user = getUserByName(userNameTemp);  //通过用户名获取用户类User
 		
 		//首先判断该用户是否存在
 		if( user == null ){
@@ -411,7 +411,7 @@ public class User implements Cloneable,Serializable{
 		
 		/*---------------------2016年11月12日16:10:14 将数组改成集合--------------------------------*/
 		 //判断用户选择的问题是否和之前注册时选择的问题索引一致
-		boolean flagSelectionProblem = (user.getUserChooseProblem() == selectionProblem);   
+		boolean flagSelectionProblem = (user.getUserChooseProblem() == (selectionProblem-1));   
 		// 用户回答正确
 		if (flagSelectionProblem && user.getUserQuestionAnswer()
 				.equals(questionAnswerTemp)) {
@@ -800,7 +800,6 @@ public class User implements Cloneable,Serializable{
 		return true;
 	}
 
-	
 	/**
 	 * 获取该用户的日记列表
 	 * @return
@@ -839,6 +838,11 @@ public class User implements Cloneable,Serializable{
 		return false;
 	}
 
+	/**
+	 * 判断次邮箱是否符合要求
+	 * @param emailTemp
+	 * @return
+	 */
 	public static boolean isCurrentEmail(String emailTemp){
 		// 邮箱必须符合邮箱格式，最长不能超过 50 个字符 \. 点字符 + >=1次
 		String regexEmail = "[_a-zA-Z0-9]+@[0-9a-zA-Z]+(\\.[a-zA-Z]+)+";
