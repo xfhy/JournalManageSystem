@@ -24,6 +24,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
+import liang.guo.diary.util.JFrameManager;
 
 /**
  * @author  XFHY
@@ -31,7 +32,11 @@ import liang.guo.diary.mylistener.BackButtonListener;
  * @package liang.guo.diary.retripasw
  * @function 修改密码窗口   
  */
-public class ModifyPasswordWindow {
+public class ModifyPasswordWindow{
+
+	/**
+	 * 需要修改密码的那个User类
+	 */
 	private User user;
 	
 	JFrame mainFrame = new JFrame("修改密码");
@@ -78,7 +83,7 @@ public class ModifyPasswordWindow {
 		
 		    /*------设置按钮监听器--------*/
 		submitButton.addActionListener(new SubmitActionListener());       //提交按钮监听器
-		backButton.addActionListener(new BackButtonListener(mainFrame));  //返回按钮监听器
+		backButton.addActionListener(new BackButtonListener("修改密码界面",mainFrame));  //返回按钮监听器
 		
 		//鼠标放上去的提示信息
 		passwordTextField.setToolTipText(PASSWORDPROMPTINFORMATION);
@@ -96,6 +101,8 @@ public class ModifyPasswordWindow {
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);  //设置JFrame可见
+		JFrameManager.addJFrame("修改密码界面", mainFrame);
+		JFrameManager.setModel("修改密码界面");
 	}
 	
 	/**

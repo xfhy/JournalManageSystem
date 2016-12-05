@@ -30,6 +30,7 @@ import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
 import liang.guo.diary.mylistener.MyMouseListener;
 import liang.guo.diary.util.BackgroundPanel;
+import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.MyRegExp;
 import liang.guo.diary.util.Utility;
 
@@ -119,7 +120,7 @@ public class RegisteredJournalSystem {
 		initJLabelAndTextField();   //初始化所有的JLabel和JTextField
 		
 		registerButton.addActionListener(new RegisterBtnListener());   //注册按钮监听器
-		backButton.addActionListener(new BackButtonListener(mainFrame));  //返回按钮监听器
+		backButton.addActionListener(new BackButtonListener("注册界面",mainFrame));  //返回按钮监听器
 
 		// 内容窗格默认的布局管理器为BorderLayout
 		imagePanel.add(createCenterGridBagLayout()); // 设置布局
@@ -138,6 +139,7 @@ public class RegisteredJournalSystem {
 		mainFrame.setLocationRelativeTo(null); // 设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true); // 设置JFrame可见
+		JFrameManager.addJFrame("注册界面",mainFrame);
 	}
 
 	/**
@@ -449,6 +451,8 @@ public class RegisteredJournalSystem {
 				icon = new ImageIcon("image/dialog/信息.png");
 				JOptionPane.showMessageDialog(null, "恭喜!注册成功!",
 						"恭喜!注册成功!", JOptionPane.INFORMATION_MESSAGE, icon);
+				JFrameManager.removeJFrame("注册界面");
+				mainFrame.dispose();
 			}   
 		}
 		

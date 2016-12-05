@@ -15,6 +15,7 @@ import javax.swing.plaf.FontUIResource;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.util.BackgroundPanel;
+import liang.guo.diary.util.JFrameManager;
 
 
 /**
@@ -49,9 +50,15 @@ public class MainPage extends JFrame {
 	BackgroundPanel mainBackGround;
 	
 	/**
+	 * 标题
+	 */
+	private final static String JFRAMETITLE = "日记管理系统主界面";
+	
+	/**
 	 * 构造函数
 	 */
 	public MainPage(){
+		this.setTitle(JFRAMETITLE);
 		init();
 	}
 	
@@ -99,6 +106,7 @@ public class MainPage extends JFrame {
 		this.setLocationRelativeTo(null);    //设置JFrame居中
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);  //设置JFrame可见
+		JFrameManager.addJFrame(JFRAMETITLE, this);
 	}
 	
 	/**

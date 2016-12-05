@@ -59,7 +59,7 @@ public class LoginCheck {
 		for(User u : Utility.getAllUserInfo()){
 			if(u.getUserName().equals(name) && u.getUserPassword().equals(passwrd)){
 				
-				JOptionPane.showMessageDialog(null, "登录成功!您的信息如下:\n"+u.toString());    //测试用  输出登录成功用户的信息
+				//JOptionPane.showMessageDialog(null, "登录成功!您的信息如下:\n"+u.toString());    //测试用  输出登录成功用户的信息
 				
 				return LOGINSYSTEMSUCCESS;   //登录成功
 			}

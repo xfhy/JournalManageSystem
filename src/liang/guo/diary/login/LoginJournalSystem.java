@@ -30,9 +30,11 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.main.MainPage;
 import liang.guo.diary.mylistener.MyKeyListener;
 import liang.guo.diary.register.RegisteredJournalSystem;
 import liang.guo.diary.retripasw.RetrievePasswordWindow;
+import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -125,6 +127,7 @@ public class LoginJournalSystem {
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true); // 设置JFrame可见
+		JFrameManager.addJFrame("登录界面",mainFrame);
 	}
 
 	/**
@@ -368,7 +371,9 @@ public class LoginJournalSystem {
 		//登录成功
 		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
 			// TODO Auto-generated method stub
-			System.out.println("登录成功");
+			new MainPage().showUI();
+			JFrameManager.removeJFrame("登录界面");
+			mainFrame.dispose();
 		} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户
 			// TODO Auto-generated method stub
 			System.out.println("不是合法用户");

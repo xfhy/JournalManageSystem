@@ -27,6 +27,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
+import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.MyRegExp;
 
 /**
@@ -87,7 +88,7 @@ public class RetrievePasswordWindow {
 		
 		//设置按钮监听器
 		submitButton.addActionListener(new SubmitActionListener());
-		backButton.addActionListener(new BackButtonListener(mainFrame));  //返回按钮监听器
+		backButton.addActionListener(new BackButtonListener("找回密码界面",mainFrame));  //返回按钮监听器
 		
 		//鼠标放上去之后的提示信息
 		userNameTextField.setToolTipText(VERIFYPROBLEMPROMPTINFORMATION);
@@ -106,6 +107,8 @@ public class RetrievePasswordWindow {
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);  //设置JFrame可见
+		JFrameManager.addJFrame("找回密码界面", mainFrame);
+		JFrameManager.setModel("找回密码界面");
 	}
 	
 	/**
@@ -247,7 +250,10 @@ public class RetrievePasswordWindow {
 			
 			//用户找回密码
 			User user = passwordRecoveryLogic.userRetrievePassword(userName,selectIndex,problemAnswer);
-			new ModifyPasswordWindow(user).showUI();
+			if(user != null){
+				new ModifyPasswordWindow(user).showUI();    //启动修改密码界面
+				
+			}
 		}
 		
 	}
