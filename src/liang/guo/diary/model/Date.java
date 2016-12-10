@@ -88,6 +88,19 @@ public class Date implements Comparable<Date>,Serializable{
 	}
 
 	/**
+	 * 设置日期
+	 * @param date
+	 */
+	public void setDate(String date){
+		if(!inputIsDate(date)){
+			System.err.println("日期格式错误");
+			return ;
+		}
+		
+		this.date = date;
+	}
+	
+	/**
 	 * 返回日期信息
 	 * @return
 	 */

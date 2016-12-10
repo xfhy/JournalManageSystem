@@ -31,6 +31,7 @@ import javax.swing.plaf.FontUIResource;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.main.MainPage;
+import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.MyKeyListener;
 import liang.guo.diary.register.RegisteredJournalSystem;
 import liang.guo.diary.retripasw.RetrievePasswordWindow;
@@ -63,11 +64,11 @@ public class LoginJournalSystem {
 	/**
 	 * 账号输入框
 	 */
-	private JTextField accountNumberTextField = new JTextField(20);
+	private JTextField accountNumberTextField = new JTextField(10);
 	/**
 	 * 密码输入框
 	 */
-	private JPasswordField passwordTextField = new JPasswordField(20);
+	private JPasswordField passwordTextField = new JPasswordField(10);
 	
 	/**
 	 * 记住密码
@@ -245,7 +246,7 @@ public class LoginJournalSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		InitGlobalFont(new Font("黑体",Font.PLAIN,15));  
+		InitGlobalFont(new Font(Font.SANS_SERIF,Font.BOLD,18));  
         try {  
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
             
@@ -355,6 +356,7 @@ public class LoginJournalSystem {
 	 * 用户点击了登录按钮或者按下enter键   则执行下面的
 	 */
 	public void loginProcess() {
+		//获取用户输入的数据
 		String name = accountNumberTextField.getText();
 		String password = new String(passwordTextField.getPassword());
 		
@@ -373,6 +375,9 @@ public class LoginJournalSystem {
 			// TODO Auto-generated method stub
 			new MainPage().showUI();
 			JFrameManager.removeJFrame("登录界面");
+			
+			Utility.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
+			
 			mainFrame.dispose();
 		} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户
 			// TODO Auto-generated method stub

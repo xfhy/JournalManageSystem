@@ -817,6 +817,14 @@ public class User implements Cloneable,Serializable{
 	}
 	
 	/**
+	 * 添加日记
+	 * @return
+	 */
+	public boolean addDiary(Diary diary){
+		return ownDiaries.add(diary);
+	}
+	
+	/**
 	 * 判断此密码是否符合要求
 	 * @param passwordTemp
 	 * @return

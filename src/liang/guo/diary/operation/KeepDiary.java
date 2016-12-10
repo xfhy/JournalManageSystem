@@ -14,7 +14,7 @@ import liang.guo.diary.util.Utility;
  * 用来写日记
  * 2016年10月18日 下午8:43:34
  * @author XFHY
- *
+ * 控制台版
  */
 public class KeepDiary {
 	

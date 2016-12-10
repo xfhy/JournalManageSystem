@@ -17,7 +17,8 @@ public class Test{
 	 * 显示UI
 	 */
 	public void showUI(){
-		
+		mainFrame.setResizable(false); // 设置窗体大小不可改变
+		mainFrame.setLocationRelativeTo(null); // 设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);  //设置JFrame可见
 	}

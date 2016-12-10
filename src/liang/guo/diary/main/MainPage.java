@@ -2,6 +2,8 @@ package liang.guo.diary.main;
 
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 import javax.swing.ImageIcon;
@@ -14,6 +16,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.operation.KeepDiaryWindow;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 
@@ -32,6 +35,11 @@ public class MainPage extends JFrame {
 	 */
 	private static final long serialVersionUID = 8742469121530688625L;
 
+	/**
+	 * 主窗口
+	 */
+	JFrame mainFrame;// = new JFrame();
+	
 	/**
 	 * 主菜单栏
 	 */
@@ -58,6 +66,7 @@ public class MainPage extends JFrame {
 	 * 构造函数
 	 */
 	public MainPage(){
+		mainFrame = this;
 		this.setTitle(JFRAMETITLE);
 		init();
 	}
@@ -80,10 +89,14 @@ public class MainPage extends JFrame {
 	 * 初始化所有菜单
 	 */
 	public void initAllMenu(){
+		/*-------设置菜单图标--------*/
 		keepDiaryMenuItem.setIcon(new ImageIcon("image/main/写日记.png"));
 		seeDiaryMenuItem.setIcon(new ImageIcon("image/main/查找.png"));
 		exitMenuItem.setIcon(new ImageIcon("image/main/退出.png"));
 		logoffMenuItem.setIcon(new ImageIcon("image/main/注销.png"));
+		
+		/*------------设置菜单监听器------------*/
+		keepDiaryMenuItem.addActionListener(new KeepDiaryMenuItemListener());
 		
 		//日记管理菜单
 		diaryManagementMenu.add(keepDiaryMenuItem);
@@ -114,7 +127,7 @@ public class MainPage extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		InitGlobalFont(new Font(Font.SANS_SERIF,Font.PLAIN,15));  
+		InitGlobalFont(new Font(Font.SANS_SERIF,Font.BOLD,18));  
         try {  
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
             
@@ -147,5 +160,18 @@ public class MainPage extends JFrame {
             }  
         }  
     }  
+	
+	/**
+	 * 写日记菜单  监听器
+	 */
+	class KeepDiaryMenuItemListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new KeepDiaryWindow().showUI();
+			mainFrame.dispose();
+		}
+		
+	}
 	
 }
