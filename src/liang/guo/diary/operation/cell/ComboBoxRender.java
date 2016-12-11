@@ -1,4 +1,4 @@
-package liang.guo.diary.operation;
+package liang.guo.diary.operation.cell;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,7 +22,7 @@ public class ComboBoxRender extends JPanel {
 	private static final long serialVersionUID = 1816886291303992766L;
 
 	/**
-	 * 图表
+	 * 图标
 	 */
 	protected ImageIcon imageIcon;
 	/**

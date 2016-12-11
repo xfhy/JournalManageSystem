@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 
 import javax.swing.Icon;
@@ -24,6 +25,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
+import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.util.JFrameManager;
 
 /**
@@ -90,6 +92,7 @@ public class ModifyPasswordWindow{
 		confirmPasswordField.setToolTipText(PASSWORDPROMPTINFORMATION);
 		
 		mainFrame.add(createCenterPane(),BorderLayout.CENTER);
+		mainFrame.addWindowListener(new ModifyPasswordWindowListener());
 		mainFrame.setSize(600, 400);    
 	}
 	
@@ -101,7 +104,6 @@ public class ModifyPasswordWindow{
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);  //设置JFrame可见
-		JFrameManager.addJFrame("修改密码界面", mainFrame);
 		JFrameManager.setModel("修改密码界面");
 	}
 	
@@ -269,6 +271,27 @@ public class ModifyPasswordWindow{
 			icon = new ImageIcon("image/dialog/完成.png");
 			JOptionPane.showMessageDialog(null, "密码修改成功",
 					"密码修改成功", JOptionPane.INFORMATION_MESSAGE, icon);
+		}
+		
+	}
+	
+	/**
+	 * 窗口监听器  
+	 * 监听窗口的关闭,打开等
+	 */
+	class ModifyPasswordWindowListener extends MyWindowListener{
+		
+		//用户试图从窗口的系统菜单中关闭窗口时调用。
+		@Override
+		public void windowClosing(WindowEvent e) {
+			JFrameManager.removeJFrame("修改密码窗口");
+		}
+
+		//窗口首次变为可见时调用。
+		@Override
+		public void windowOpened(WindowEvent e) {
+			super.windowOpened(e);
+			JFrameManager.addJFrame("修改密码窗口", mainFrame);
 		}
 		
 	}

@@ -22,7 +22,7 @@ public class DateComparator implements Comparator<Diary> {
 	public int compare(Diary diary1, Diary diary2) {
 		Date date1 = diary1.getDate();
 		Date date2 = diary2.getDate();
-		return date1.compareTo(date2);
+		return date2.compareTo(date1);
 	}
 
 }

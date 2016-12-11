@@ -13,9 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -33,9 +33,11 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import liang.guo.diary.main.MainPage;
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.MyKeyListener;
+import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.register.RegisteredJournalSystem;
 import liang.guo.diary.retripasw.RetrievePasswordWindow;
 import liang.guo.diary.util.JFrameManager;
+import liang.guo.diary.util.ShowDialog;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -116,7 +118,7 @@ public class LoginJournalSystem {
 		Image icon = Toolkit.getDefaultToolkit().getImage("image/login/默认小图标.png");   
 		mainFrame.setIconImage(icon);   //设置窗口左上角的小图标
 		
-		
+		mainFrame.addWindowListener(new LoginJournalWindowListener());
 		mainFrame.getContentPane().setBackground(Color.WHITE);    
 	}
 
@@ -128,14 +130,13 @@ public class LoginJournalSystem {
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true); // 设置JFrame可见
-		JFrameManager.addJFrame("登录界面",mainFrame);
 	}
 
 	/**
 	 * 测试用
 	 */
 	public void test(){
-		accountNumberTextField.setText("xfhy8888");
+		accountNumberTextField.setText("xfhy666");
 		passwordTextField.setText("qwert;123");
 		passwordTextField.setEchoChar('●');
 	}
@@ -365,16 +366,14 @@ public class LoginJournalSystem {
 		if(!name.equals(ACCOUNTINFO) && !password.equals(PASSWORDINFO)){
 			isLoginSuccess = LoginCheck.isSucceed(name, password);   //去判断是否成功成功
 		} else {
-			Icon icon = new ImageIcon("image/dialog/警告.png");
-			JOptionPane.showMessageDialog(null, "请输入账号和密码再进行登录", "登录失败",
-					JOptionPane.WARNING_MESSAGE, icon);
+			ShowDialog.showMyDialog("请输入账号和密码再进行登录", "登录失败", 
+					JOptionPane.WARNING_MESSAGE);
 		}
 		
 		//登录成功
 		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
 			// TODO Auto-generated method stub
 			new MainPage().showUI();
-			JFrameManager.removeJFrame("登录界面");
 			
 			Utility.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
 			
@@ -427,6 +426,27 @@ public class LoginJournalSystem {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new RetrievePasswordWindow().showUI();
+		}
+		
+	}
+	
+	/**
+	 * 窗口监听器  
+	 * 监听窗口的关闭,打开等
+	 */
+	class LoginJournalWindowListener extends MyWindowListener{
+		
+		//用户试图从窗口的系统菜单中关闭窗口时调用。
+		@Override
+		public void windowClosing(WindowEvent e) {
+			JFrameManager.removeJFrame("登录窗口");
+		}
+
+		//窗口首次变为可见时调用。
+		@Override
+		public void windowOpened(WindowEvent e) {
+			super.windowOpened(e);
+			JFrameManager.addJFrame("登录窗口", mainFrame);
 		}
 		
 	}

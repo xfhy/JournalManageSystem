@@ -98,7 +98,7 @@ public class Diary implements Serializable{
 	@Override
 	public String toString() {
 		StringBuffer diaryInfo = new StringBuffer();
-		diaryInfo.append("日期:"+date.toString()+"\n");
+		diaryInfo.append("日期:"+date.toString()+",");
 		
 		diaryInfo.append("天气:");
 		switch (weather) {
@@ -124,7 +124,7 @@ public class Diary implements Serializable{
 			diaryInfo.append("null");
 			break;
 		}
-		diaryInfo.append("\n");
+		diaryInfo.append(",");
 		
 		diaryInfo.append("心情:");
 		switch(mood){
@@ -150,9 +150,9 @@ public class Diary implements Serializable{
 			diaryInfo.append("null");
 			break;
 		}
-		diaryInfo.append("\n");
+		diaryInfo.append(",");
 		
-		diaryInfo.append("标题:"+title+"\n");
+		diaryInfo.append("标题:"+title+",");
 		diaryInfo.append("内容:"+content+"\n");
 		
 		return diaryInfo.toString();

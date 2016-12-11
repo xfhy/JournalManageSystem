@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 
 import javax.swing.Icon;
@@ -29,6 +30,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
 import liang.guo.diary.mylistener.MyMouseListener;
+import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.MyRegExp;
@@ -128,6 +130,7 @@ public class RegisteredJournalSystem {
 		// 把背景图片添加到分层窗格的最底层作为背景
 		mainFrame.getLayeredPane().add(mainBackGround, new Integer(Integer.MIN_VALUE));
 
+		mainFrame.addWindowListener(new RegisteredWindowListener());
 		mainFrame.setSize(800, 600);
 	}
 
@@ -139,7 +142,6 @@ public class RegisteredJournalSystem {
 		mainFrame.setLocationRelativeTo(null); // 设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true); // 设置JFrame可见
-		JFrameManager.addJFrame("注册界面",mainFrame);
 	}
 
 	/**
@@ -451,7 +453,6 @@ public class RegisteredJournalSystem {
 				icon = new ImageIcon("image/dialog/信息.png");
 				JOptionPane.showMessageDialog(null, "恭喜!注册成功!",
 						"恭喜!注册成功!", JOptionPane.INFORMATION_MESSAGE, icon);
-				JFrameManager.removeJFrame("注册界面");
 				mainFrame.dispose();
 			}   
 		}
@@ -506,6 +507,27 @@ public class RegisteredJournalSystem {
 		Utility.saveUserCountsToFile();     //添加用户数目到文件中
 		Utility.saveUserToFile();           //添加用户数据到文件中
 		return addSuccess;
+	}
+	
+	/**
+	 * 窗口监听器  
+	 * 监听窗口的关闭,打开等
+	 */
+	class RegisteredWindowListener extends MyWindowListener{
+		
+		//用户试图从窗口的系统菜单中关闭窗口时调用。
+		@Override
+		public void windowClosing(WindowEvent e) {
+			JFrameManager.removeJFrame("账号注册界面窗口");
+		}
+
+		//窗口首次变为可见时调用。
+		@Override
+		public void windowOpened(WindowEvent e) {
+			super.windowOpened(e);
+			JFrameManager.addJFrame("账号注册界面窗口", mainFrame);
+		}
+		
 	}
 	
 }

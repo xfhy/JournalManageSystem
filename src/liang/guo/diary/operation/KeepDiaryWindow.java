@@ -43,8 +43,12 @@ import liang.guo.diary.model.Diary;
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.MyComponentListener;
 import liang.guo.diary.mylistener.MyWindowListener;
+import liang.guo.diary.operation.cell.MoodComboBoxRenderer;
+import liang.guo.diary.operation.cell.WeatherComboBoxRenderer;
 import liang.guo.diary.operation.datechooser.DateChooserJButton;
 import liang.guo.diary.util.BackgroundPanel;
+import liang.guo.diary.util.JFrameManager;
+import liang.guo.diary.util.ShowDialog;
 import liang.guo.diary.util.Utility;
 
 /**
@@ -76,7 +80,7 @@ public class KeepDiaryWindow extends JFrame{
 	
 	//下拉框
 	JComboBox<WeatherType> weatherTypeComboBox;   //天气下拉选择框
-	JComboBox<MoodType> moodTypeComboBox;      //心情下拉选择框
+	JComboBox<MoodType> moodTypeComboBox;         //心情下拉选择框
 	
 	/**
 	 * 日期选择器
@@ -445,9 +449,9 @@ public class KeepDiaryWindow extends JFrame{
 			if(user.addDiary(diary)){
 				System.out.println(diary.toString());
 				if(Utility.saveUserToFile()){        //将用户数据保存到文件中
+					
 					Icon icon = new ImageIcon("image/dialog/完成.png");
-					JOptionPane.showMessageDialog(null, "保存成功~", "保存成功", 
-							JOptionPane.PLAIN_MESSAGE , icon);
+					ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
 				}
 			}
 		}
@@ -463,7 +467,7 @@ public class KeepDiaryWindow extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("取消");
 			mainFrame.dispose();
-			//new MainPage().showUI();
+			new MainPage().showUI();
 		}
 		
 	}
@@ -477,13 +481,14 @@ public class KeepDiaryWindow extends JFrame{
 		//用户试图从窗口的系统菜单中关闭窗口时调用。
 		@Override
 		public void windowClosing(WindowEvent e) {
-			
+			JFrameManager.removeJFrame("写日记窗口");
 		}
 
 		//窗口首次变为可见时调用。
 		@Override
 		public void windowOpened(WindowEvent e) {
 			super.windowOpened(e);
+			JFrameManager.addJFrame("写日记窗口", mainFrame);
 			diaryTextArea.requestFocus();    //设置文本域获取焦点
 		}
 		

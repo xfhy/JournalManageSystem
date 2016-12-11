@@ -4,6 +4,7 @@ package liang.guo.diary.main;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 
 import javax.swing.ImageIcon;
@@ -16,9 +17,11 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.operation.KeepDiaryWindow;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
+import liang.guo.diary.viewjour.ViewJournalWindow;
 
 
 /**
@@ -48,9 +51,10 @@ public class MainPage extends JFrame {
 	JMenu diaryManagementMenu = new JMenu("日记管理");
 	JMenu otherMenu = new JMenu("其他");
 	JMenuItem keepDiaryMenuItem = new JMenuItem("写日记");
-	JMenuItem seeDiaryMenuItem = new JMenuItem("查找日记");
+	JMenu seeDiaryMenuItem = new JMenu("查找日记");
 	JMenuItem exitMenuItem = new JMenuItem("退出");
 	JMenuItem logoffMenuItem = new JMenuItem("注销");
+	JMenuItem  viewAListOfJourMenu = new JMenuItem("查看日记列表");
 	
 	/**
 	 * 背景
@@ -82,6 +86,7 @@ public class MainPage extends JFrame {
 		this.getContentPane().add(mainBackGround);   //添加背景 布局
 		
 		this.setJMenuBar(mainMenuBar);   //设置菜单栏
+		this.addWindowListener(new MainPageWindowListener());
 		this.setSize(751, 481);    
 	}
 	
@@ -96,11 +101,13 @@ public class MainPage extends JFrame {
 		logoffMenuItem.setIcon(new ImageIcon("image/main/注销.png"));
 		
 		/*------------设置菜单监听器------------*/
-		keepDiaryMenuItem.addActionListener(new KeepDiaryMenuItemListener());
+		keepDiaryMenuItem.addActionListener(new KeepDiaryMenuItemListener());     //写日记
+		viewAListOfJourMenu.addActionListener(new SeeDiaryListMenuItemListener());   //查看日记列表
 		
 		//日记管理菜单
 		diaryManagementMenu.add(keepDiaryMenuItem);
 		diaryManagementMenu.add(seeDiaryMenuItem);
+		seeDiaryMenuItem.add(viewAListOfJourMenu);
 		
 		//其他菜单
 		otherMenu.add(exitMenuItem);
@@ -170,6 +177,42 @@ public class MainPage extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			new KeepDiaryWindow().showUI();
 			mainFrame.dispose();
+		}
+		
+	}
+	
+	/**
+	 * 查看日记列表  菜单  监听器
+	 * @author XFHY
+	 *
+	 */
+	class SeeDiaryListMenuItemListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new ViewJournalWindow().showUI();
+			mainFrame.dispose();
+		}
+		
+	}
+	
+	/**
+	 * 窗口监听器  
+	 * 监听窗口的关闭,打开等
+	 */
+	class MainPageWindowListener extends MyWindowListener{
+		
+		//用户试图从窗口的系统菜单中关闭窗口时调用。
+		@Override
+		public void windowClosing(WindowEvent e) {
+			JFrameManager.removeJFrame("日记主界面窗口");
+		}
+
+		//窗口首次变为可见时调用。
+		@Override
+		public void windowOpened(WindowEvent e) {
+			super.windowOpened(e);
+			JFrameManager.addJFrame("日记主界面窗口", mainFrame);
 		}
 		
 	}
