@@ -124,8 +124,15 @@ public class LoginJournalSystem {
 
 	/**
 	 * 显示UI
+	 * @param isFirstOpen  是否是第一次打开
 	 */
-	public void showUI() {
+	public void showUI(boolean isFirstOpen) {
+		
+		if(isFirstOpen){
+			//这里从文件中获取配置   是否是勾选了自动登录
+			//automaticLogonCheckBox.setSelected(true);
+		}
+		
 		mainFrame.setResizable(false);     //设置窗体大小不可改变
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -265,7 +272,7 @@ public class LoginJournalSystem {
         
         Utility.loadUserFileToProgram();    //装载之前用户保存成文件的信息
         
-        new LoginJournalSystem().showUI();
+        new LoginJournalSystem().showUI(true);
 	}
 
 	/**
@@ -372,17 +379,17 @@ public class LoginJournalSystem {
 		
 		//登录成功
 		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
-			// TODO Auto-generated method stub
-			new MainPage().showUI();
+			new MainPage().showUI();    //打开主界面
 			
 			Utility.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
 			
 			mainFrame.dispose();
 		} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户
-			// TODO Auto-generated method stub
-			System.out.println("不是合法用户");
+			ShowDialog.showMyDialog("登录失败!账号或密码输入错误~", "登录失败", 
+					JOptionPane.ERROR_MESSAGE);
 		} else if (isLoginSuccess == LoginCheck.CONNECTTODATABASEFAILED){  //连接数据库都没有成功
-			// TODO Auto-generated method stub
+			ShowDialog.showMyDialog("登录失败!数据库连接出现异常~", "登录失败", 
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -435,6 +442,13 @@ public class LoginJournalSystem {
 	 * 监听窗口的关闭,打开等
 	 */
 	class LoginJournalWindowListener extends MyWindowListener{
+		
+		// 因对窗口调用 dispose 而将其关闭时调用。
+		@Override
+		public void windowClosed(WindowEvent e) {
+			super.windowClosed(e);
+			JFrameManager.removeJFrame("登录窗口");
+		}
 		
 		//用户试图从窗口的系统菜单中关闭窗口时调用。
 		@Override

@@ -73,4 +73,22 @@ JOptionPane(Object message, int messageType, int optionType, Icon icon, Object[]
 		
 	}
 	
+	/**
+	 * 创建一个选项对话框   让用户选择   确定  还是  取消
+	 * @param message
+	 * @param title
+	 * @param messageType
+	 * @param icon
+	 * @return 0是确定   1是取消
+	 */
+	public static int showOptionDialog(final Object message, final String title,
+			final int messageType,final Icon icon){
+		Object[] options = {"确定","取消"};
+		int returnCode = JOptionPane.showOptionDialog(null, message.toString(), title,
+				JOptionPane.DEFAULT_OPTION, messageType, 
+				icon, options, options[0]);
+		
+		return returnCode;
+	}
+	
 }

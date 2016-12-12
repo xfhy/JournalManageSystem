@@ -248,9 +248,9 @@ public class DateChooserJButton extends JButton {
             Calendar c = getCalendar();
             int currentYear = c.get(Calendar.YEAR);
             int currentMonth = c.get(Calendar.MONTH) + 1;
-            int currentHour = c.get(Calendar.HOUR_OF_DAY);
-            int currentMinute = c.get(Calendar.MINUTE);
-            int currentSecond = c.get(Calendar.SECOND);
+            //int currentHour = c.get(Calendar.HOUR_OF_DAY);
+            //int currentMinute = c.get(Calendar.MINUTE);
+            //int currentSecond = c.get(Calendar.SECOND);
 
             JPanel result = new JPanel();
             result.setLayout(new FlowLayout());

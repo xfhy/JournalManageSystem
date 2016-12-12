@@ -41,9 +41,11 @@ import liang.guo.diary.main.MainPage;
 import liang.guo.diary.model.Date;
 import liang.guo.diary.model.Diary;
 import liang.guo.diary.mylistener.MyWindowListener;
+import liang.guo.diary.operation.edit.EditDiaryWindow;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.ShowDialog;
+import liang.guo.diary.util.Utility;
 import liang.guo.diary.viewjour.cell.DiaryCellRenderer;
 
 /**
@@ -117,7 +119,7 @@ public class ViewJournalWindow extends JFrame {
 	 */
 	public ViewJournalWindow(){
 		mainFrame = this;
-		test();
+		//test();
 		init();
 	}
 	
@@ -152,6 +154,8 @@ public class ViewJournalWindow extends JFrame {
 	 * 初始化
 	 */
 	public void init(){
+		diaries.addAll(Utility.currentUser.getOwnDiaries());    //加载  当前用户的日记数据
+		
 		diaryList = new JList<>(diaries);
 		diaryList.setCellRenderer(diaryCellRenderer);
 		jScrollPane = new JScrollPane(diaryList);
@@ -178,6 +182,7 @@ public class ViewJournalWindow extends JFrame {
 		
 		//设置按钮监听器
 		findDiaryBtn.addActionListener(new findDiaryBtnListener());       //查找按钮
+		seeDiary.addActionListener(new SeeDiaryBtnListener());            //查看日记
 		showAllDiaryBtn.addActionListener(new ShowAllDiariesListener());  //显示所有日记
 		backBtn.addActionListener(new BackBtnListener());                 //返回按钮
 		
@@ -536,6 +541,26 @@ public class ViewJournalWindow extends JFrame {
 	}
 	
 	/**
+	 * 查看当前选中日记  按钮  监听器
+	 * @author XFHY
+	 *
+	 */
+	class SeeDiaryBtnListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if(diaryList.getSelectedIndex() < 0){
+				return ;
+			}
+			Diary diary = diaryList.getSelectedValue();
+			//System.out.println(diary.toString());
+			new EditDiaryWindow(diary).showUI();
+			mainFrame.dispose();
+		}
+		
+	}
+	
+	/**
 	 * 显示所有日记列表  按钮  监听器
 	 */
 	class ShowAllDiariesListener implements ActionListener{
@@ -569,6 +594,13 @@ public class ViewJournalWindow extends JFrame {
 	 * 监听窗口的关闭,打开等
 	 */
 	class ViewJournalWindowListener extends MyWindowListener{
+		
+		// 因对窗口调用 dispose 而将其关闭时调用。
+		@Override
+		public void windowClosed(WindowEvent e) {
+			super.windowClosed(e);
+			JFrameManager.removeJFrame("查看日记列表窗口");
+		}
 		
 		//用户试图从窗口的系统菜单中关闭窗口时调用。
 		@Override

@@ -17,6 +17,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.login.LoginJournalSystem;
 import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.operation.KeepDiaryWindow;
 import liang.guo.diary.util.BackgroundPanel;
@@ -101,8 +102,10 @@ public class MainPage extends JFrame {
 		logoffMenuItem.setIcon(new ImageIcon("image/main/注销.png"));
 		
 		/*------------设置菜单监听器------------*/
-		keepDiaryMenuItem.addActionListener(new KeepDiaryMenuItemListener());     //写日记
+		keepDiaryMenuItem.addActionListener(new KeepDiaryMenuItemListener());        //写日记
 		viewAListOfJourMenu.addActionListener(new SeeDiaryListMenuItemListener());   //查看日记列表
+		exitMenuItem.addActionListener(new ExitSystemListener());                    //退出系统
+		logoffMenuItem.addActionListener(new LogOffSystemListener());                //注销系统
 		
 		//日记管理菜单
 		diaryManagementMenu.add(keepDiaryMenuItem);
@@ -190,17 +193,54 @@ public class MainPage extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new ViewJournalWindow().showUI();
-			mainFrame.dispose();
+			new ViewJournalWindow().showUI();    //打开   查看日记列表   界面
+			mainFrame.dispose();    //关闭当前界面
 		}
 		
 	}
+
+	/**
+	 * 退出  系统
+	 * @author XFHY
+	 *
+	 */
+	class ExitSystemListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFrameManager.destroyAllJFrame();     //关闭所有窗口
+		}
+		
+	}
+	
+	/**
+	 * 注销系统菜单  监听器
+	 * @author XFHY
+	 *
+	 */
+	class LogOffSystemListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new LoginJournalSystem().showUI(false);    //打开登录窗口
+			JFrameManager.destroyAllJFrame();     //关闭所有窗口
+		}
+		
+	}
+	
 	
 	/**
 	 * 窗口监听器  
 	 * 监听窗口的关闭,打开等
 	 */
 	class MainPageWindowListener extends MyWindowListener{
+		
+		// 因对窗口调用 dispose 而将其关闭时调用。
+		@Override
+		public void windowClosed(WindowEvent e) {
+			super.windowClosed(e);
+			JFrameManager.removeJFrame("日记主界面窗口");
+		}
 		
 		//用户试图从窗口的系统菜单中关闭窗口时调用。
 		@Override

@@ -29,7 +29,7 @@ public class Test{
 	 */
 	public static void main(String[] args) {
 		//InitGlobalFont(new Font(UICons.FONT_TYPE, Font.PLAIN, UICons.FONT_SIZE));  
-		InitGlobalFont(new Font(Font.SANS_SERIF,Font.PLAIN,15));  
+		InitGlobalFont(new Font(Font.SANS_SERIF,Font.BOLD,18));  
         try {  
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
             

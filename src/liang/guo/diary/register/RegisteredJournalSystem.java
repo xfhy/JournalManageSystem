@@ -515,6 +515,13 @@ public class RegisteredJournalSystem {
 	 */
 	class RegisteredWindowListener extends MyWindowListener{
 		
+		// 因对窗口调用 dispose 而将其关闭时调用。
+		@Override
+		public void windowClosed(WindowEvent e) {
+			super.windowClosed(e);
+			JFrameManager.removeJFrame("账号注册界面窗口");
+		}
+		
 		//用户试图从窗口的系统菜单中关闭窗口时调用。
 		@Override
 		public void windowClosing(WindowEvent e) {

@@ -266,6 +266,13 @@ public class RetrievePasswordWindow {
 	 */
 	class RetrievePassWindowListener extends MyWindowListener{
 		
+		// 因对窗口调用 dispose 而将其关闭时调用。
+		@Override
+		public void windowClosed(WindowEvent e) {
+			super.windowClosed(e);
+			JFrameManager.removeJFrame("找回密码窗口");
+		}
+		
 		//用户试图从窗口的系统菜单中关闭窗口时调用。
 		@Override
 		public void windowClosing(WindowEvent e) {
