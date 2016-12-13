@@ -186,7 +186,7 @@ public class KeepDiaryWindow extends JFrame{
 		
 		//this.setResizable(false); // 设置窗体大小不可改变
 		this.setLocationRelativeTo(null); // 设置JFrame居中
-		//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);  //设置JFrame可见
 		
 		System.out.println(user.getOwnDiaries().toString());

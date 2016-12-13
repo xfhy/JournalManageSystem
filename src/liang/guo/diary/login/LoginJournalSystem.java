@@ -39,6 +39,7 @@ import liang.guo.diary.retripasw.RetrievePasswordWindow;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.ShowDialog;
 import liang.guo.diary.util.Utility;
+import liang.guo.diary.util.config.Config;
 
 /**
  * @author XFHY
@@ -92,9 +93,27 @@ public class LoginJournalSystem {
 	private final static String PASSWORDINFO = "请输入 <密码>";
 	
 	/**
+	 * 上一次是否记住密码
+	 */
+	private boolean rememberPassword = false;
+	/**
+	 * 上一次是否自动登录
+	 */
+	private boolean automaticLogon = false;
+	
+	/**
+	 * 上一次用户名
+	 */
+	private String last_user_name = "";
+	/**
+	 * 上一次密码
+	 */
+	private String last_user_password = "";
+	
+	/**
 	 * 构造方法
 	 */
-	public LoginJournalSystem() {
+ 	public LoginJournalSystem() {
 		init();
 	}
 
@@ -113,7 +132,7 @@ public class LoginJournalSystem {
 		mainFrame.add(createCenterPanel(),BorderLayout.CENTER);
 		mainFrame.setSize(400, 400); 
 		
-		test();    //测试用
+		//test();    //测试用
 		
 		Image icon = Toolkit.getDefaultToolkit().getImage("image/login/默认小图标.png");   
 		mainFrame.setIconImage(icon);   //设置窗口左上角的小图标
@@ -124,28 +143,52 @@ public class LoginJournalSystem {
 
 	/**
 	 * 显示UI
-	 * @param isFirstOpen  是否是第一次打开
+	 * @param loadAuto  是否需要读取自动登录
 	 */
-	public void showUI(boolean isFirstOpen) {
-		
-		if(isFirstOpen){
-			//这里从文件中获取配置   是否是勾选了自动登录
-			//automaticLogonCheckBox.setSelected(true);
+	public void showUI(boolean loadAuto) {
+		if(loadAuto){
+			loadLastConfig(true);              //读取之前的配置文件
+		} else {
+			loadLastConfig(false);              //读取之前的配置文件
+			automaticLogon = false;
 		}
 		
 		mainFrame.setResizable(false);     //设置窗体大小不可改变
 		mainFrame.setLocationRelativeTo(null);    //设置JFrame居中
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true); // 设置JFrame可见
+		
+		if(automaticLogon){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			loginProcess();
+		}
 	}
-
+	
 	/**
-	 * 测试用
+	 * 从配置文件中读取上一次的配置
+	 * 是否需要读自动登录
 	 */
-	public void test(){
-		accountNumberTextField.setText("xfhy666");
-		passwordTextField.setText("qwert;123");
-		passwordTextField.setEchoChar('●');
+	public void loadLastConfig(boolean loadAuto){
+		Config config = new Config();
+		boolean rememberPassword = config.isRememberPassword();   //读取是否记住密码
+		
+		if(rememberPassword){
+			last_user_name = config.getUser_name();               //获取用户名
+			last_user_password = config.getUser_password();
+			accountNumberTextField.setText(last_user_name);
+			passwordTextField.setText(last_user_password);
+			passwordTextField.setEchoChar('●');   //当用户点击输入框,则输入密码,显示●
+		}
+		rememberPasswordCheckBox.setSelected(rememberPassword);
+		
+		if(loadAuto){
+			automaticLogon = config.isAutomaticLogon();    
+			automaticLogonCheckBox.setSelected(automaticLogon);
+		}
 	}
 	
 	/**
@@ -340,7 +383,6 @@ public class LoginJournalSystem {
 				passwordTextField.setText(PASSWORDINFO);
 				passwordTextField.setEchoChar('\0');     //设置明文显示文字
 			}
-			//System.out.println(password);
 		}
 		
 	}
@@ -358,15 +400,14 @@ public class LoginJournalSystem {
 		
 	}
 	
-	
 	/**
 	 * 判读用户是否为正确的用户
 	 * 用户点击了登录按钮或者按下enter键   则执行下面的
 	 */
 	public void loginProcess() {
 		//获取用户输入的数据
-		String name = accountNumberTextField.getText();
-		String password = new String(passwordTextField.getPassword());
+		String name = accountNumberTextField.getText();                  //用户名
+		String password = new String(passwordTextField.getPassword());   //密码
 		
 		     /*----------------检查是否登录成功---------------*/
 		int isLoginSuccess = LoginCheck.CONNECTTODATABASEFAILED;    //是否登录成功
@@ -376,6 +417,27 @@ public class LoginJournalSystem {
 			ShowDialog.showMyDialog("请输入账号和密码再进行登录", "登录失败", 
 					JOptionPane.WARNING_MESSAGE);
 		}
+		
+		
+		    /*------------------检查是否记住密码,是否自动登录-------------------*/
+		Config config = new Config(false);
+		if(rememberPasswordCheckBox.isSelected()){   //如果用户选择了,记住密码
+			config.setRemePassToFile(true);          //将这项纪录保存到配置文件中
+			config.setUserNameToFile(name);          //保存用户名到配置文件中
+			config.setUserPassToFile(password);      //保存密码到配置文件中
+		} else {
+			config.setRemePassToFile(false);          //将这项纪录保存到配置文件中
+			config.setUserNameToFile("");          //保存用户名到配置文件中
+			config.setUserPassToFile("");      //保存密码到配置文件中
+		}
+		
+		if(automaticLogonCheckBox.isSelected()){     //如果用户选择了   自动登录
+			config.setAutomaticLogonToFile(true);
+		} else {
+			config.setAutomaticLogonToFile(false);
+			System.out.println("设置false");
+		}
+		
 		
 		//登录成功
 		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){

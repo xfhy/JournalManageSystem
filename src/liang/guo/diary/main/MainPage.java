@@ -222,8 +222,8 @@ public class MainPage extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new LoginJournalSystem().showUI(false);    //打开登录窗口
 			JFrameManager.destroyAllJFrame();     //关闭所有窗口
+			new LoginJournalSystem().showUI(false);    //打开登录窗口
 		}
 		
 	}
