@@ -26,6 +26,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
 import liang.guo.diary.mylistener.MyWindowListener;
@@ -251,10 +252,9 @@ public class RetrievePasswordWindow {
 			}
 			
 			//用户找回密码
-			User user = passwordRecoveryLogic.userRetrievePassword(userName,selectIndex,problemAnswer);
-			if(user != null){
-				new ModifyPasswordWindow(user).showUI();    //启动修改密码界面
-				
+			if(passwordRecoveryLogic.isCurrentAnswer(userName, selectIndex+1, problemAnswer)){
+				int id = DatabaseTool.getIdByUserName(userName);   //根据用户名获取用户id
+				new ModifyPasswordWindow(id).showUI();    //启动修改密码界面
 			}
 		}
 		

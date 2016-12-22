@@ -19,6 +19,10 @@ public class Diary implements Serializable{
 	 */
 	private static final long serialVersionUID = 8871500024376654702L;
 	/**
+	 * 编号
+	 */
+	private int num;
+	/**
 	 * 日期
 	 */
 	private Date date;
@@ -39,6 +43,14 @@ public class Diary implements Serializable{
 	 */
 	private String content;
 	
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
 	/**
 	 * 返回日期对象
 	 * @return

@@ -35,6 +35,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.enumerate.MoodType;
 import liang.guo.diary.enumerate.WeatherType;
 import liang.guo.diary.main.MainPage;
@@ -130,6 +131,7 @@ public class KeepDiaryWindow extends JFrame{
 		this.setTitle("写日记");
 		mainFrame = this;
 		init();
+		System.out.println(Utility.currentUser.toString());
 	}
 	
 	/**
@@ -188,9 +190,6 @@ public class KeepDiaryWindow extends JFrame{
 		this.setLocationRelativeTo(null); // 设置JFrame居中
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);  //设置JFrame可见
-		
-		System.out.println(user.getOwnDiaries().toString());
-		
 	}
 	
 	/**
@@ -368,7 +367,6 @@ public class KeepDiaryWindow extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("保存");
 			WeatherType weather;  //天气
 			MoodType mood;        //心情
 			Date date;            //日期
@@ -446,14 +444,33 @@ public class KeepDiaryWindow extends JFrame{
 			diary.setContent(content);
 			
 			//将这个日记类放到当前用户的数据中去
-			if(user.addDiary(diary)){
-				System.out.println(diary.toString());
-				if(Utility.saveUserToFile()){        //将用户数据保存到文件中
-					
+			user.addDiary(diary);
+//			if(user.addDiary(diary)){
+//				if(Utility.saveUserToFile()){        //将用户数据保存到文件中
+//					
+//					Icon icon = new ImageIcon("image/dialog/完成.png");
+//					ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
+//				}
+//			}
+			
+			//保存日记类到数据库   保存该日记类与用户的联系到数据库
+			if(DatabaseTool.addDiaryToDatabase(diary)){
+				//现在需要获取到刚刚插入的日记的编号
+				int num = DatabaseTool.getMaxDiaryIdFromDb();
+				
+				if(num == -1){
+					Icon icon = new ImageIcon("image/dialog/错误.png");
+					ShowDialog.showMyDialog("保存失败..", "保存失败", JOptionPane.ERROR_MESSAGE, icon);
+					return ;
+				}
+				
+				//添加日记与用户的联系到数据库中
+				if(DatabaseTool.addContactToDatabase(Utility.currentUser.getId(), num)){
 					Icon icon = new ImageIcon("image/dialog/完成.png");
 					ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
 				}
-			}
+			}  
+			
 		}
 		
 	}
@@ -465,7 +482,6 @@ public class KeepDiaryWindow extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("取消");
 			mainFrame.dispose();
 			new MainPage().showUI();
 		}

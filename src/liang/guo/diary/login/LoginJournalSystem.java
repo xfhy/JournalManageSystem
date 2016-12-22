@@ -174,7 +174,7 @@ public class LoginJournalSystem {
 	 */
 	public void loadLastConfig(boolean loadAuto){
 		Config config = new Config();
-		boolean rememberPassword = config.isRememberPassword();   //读取是否记住密码
+		rememberPassword = config.isRememberPassword();   //读取是否记住密码
 		
 		if(rememberPassword){
 			last_user_name = config.getUser_name();               //获取用户名
@@ -435,7 +435,6 @@ public class LoginJournalSystem {
 			config.setAutomaticLogonToFile(true);
 		} else {
 			config.setAutomaticLogonToFile(false);
-			System.out.println("设置false");
 		}
 		
 		
@@ -443,7 +442,7 @@ public class LoginJournalSystem {
 		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
 			new MainPage().showUI();    //打开主界面
 			
-			Utility.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
+			//Utility.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
 			
 			mainFrame.dispose();
 		} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户

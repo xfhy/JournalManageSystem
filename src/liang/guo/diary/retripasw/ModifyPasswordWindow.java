@@ -23,7 +23,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
-import liang.guo.diary.model.User;
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.mylistener.BackButtonListener;
 import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.util.JFrameManager;
@@ -35,11 +35,11 @@ import liang.guo.diary.util.JFrameManager;
  * @function 修改密码窗口   
  */
 public class ModifyPasswordWindow{
-
+	
 	/**
-	 * 需要修改密码的那个User类
+	 * 用户id   通过这个id可以修改数据库中id对应用户的密码
 	 */
-	private User user;
+	private int id;   
 	
 	JFrame mainFrame = new JFrame("修改密码");
 	
@@ -70,12 +70,12 @@ public class ModifyPasswordWindow{
 	}
 	
 	/**
-	 * 构造函数   传入User类
-	 * @param user
+	 * 构造函数  传入用户id
+	 * @param id
 	 */
-	public ModifyPasswordWindow(User user){
+	public ModifyPasswordWindow(int id){
 		this();
-		this.user = user;
+		this.id = id;
 	}
 	
 	/**
@@ -259,18 +259,23 @@ public class ModifyPasswordWindow{
 			}
 			
 			//判断user是否为空
-			if(user == null){
+			if(id == -1){
 				JOptionPane.showMessageDialog(null, "亲,发送意外错误,密码更改失败,请重新更改...",
 						"亲,发送意外错误", JOptionPane.ERROR_MESSAGE, icon);
 				return ;
 			}
 			
 			//上面的各种拦截都没拦截下来,说明这是符合要求的密码    下面   更改密码
-			user.setUserPassword(password);
+			if(DatabaseTool.modifyPassById(id, password)){
+				icon = new ImageIcon("image/dialog/完成.png");
+				JOptionPane.showMessageDialog(null, "密码修改成功",
+						"密码修改成功", JOptionPane.INFORMATION_MESSAGE, icon);
+			} else {
+				icon = new ImageIcon("image/dialog/错误.png");
+				JOptionPane.showMessageDialog(null, "密码修改失败",
+						"密码修改失败", JOptionPane.ERROR_MESSAGE, icon);
+			}
 			
-			icon = new ImageIcon("image/dialog/完成.png");
-			JOptionPane.showMessageDialog(null, "密码修改成功",
-					"密码修改成功", JOptionPane.INFORMATION_MESSAGE, icon);
 		}
 		
 	}

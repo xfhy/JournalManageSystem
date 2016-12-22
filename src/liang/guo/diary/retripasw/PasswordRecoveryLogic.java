@@ -1,9 +1,15 @@
 package liang.guo.diary.retripasw;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.model.User;
 import liang.guo.diary.util.Utility;
 
@@ -62,16 +68,52 @@ public class PasswordRecoveryLogic {
 			JOptionPane.showMessageDialog(null, "回答错误,密码找回失败~",   
 					"回答错误,密码找回失败~", JOptionPane.ERROR_MESSAGE, icon);
 			return null;
-			//System.out.println("\t密码提示问题验证成功!");
-			
-			//user.setUserPassword(inputUserPassword()); // 获取用户输入的密码(函数里面已包含确认密码)
-			//JOptionPane.showInputDialog("发发疯");
-			//System.out.println("密码已成功更改~");
-			//System.out.println("您的密码已更新,请一定不要告诉别人喔:   "+ user.getUserPassword());
-			//System.out.println(user.toString());
-			
 		}
 		
 		return user;
 	}
+	
+	
+	/**
+	 * 用户找回密码时,回答是否正确
+	 * @param userNameTemp  用户名
+	 * @param selectionProblem  选择的问题
+	 * @param questionAnswerTemp 问题答案
+	 * @return
+	 */
+	public boolean isCurrentAnswer(String userName,
+			int selectionProblem,String questionAnswer){
+		Connection conn = DatabaseTool.getConnection();   // 获取数据库连接
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		//select * from `user` where `username`='1' and `ansindex`='2' and `answer`='1'; 
+		String sql = "select * from user where username=? and ansindex=? and answer=?";
+		try {
+			preparedStatement = conn.prepareStatement(sql);  // 创建一个 PreparedStatement
+															// 对象来将参数化的 SQL 语句发送到数据库
+			// 设置上面sql语句占位符的内容
+			preparedStatement.setString(1, userName);
+			preparedStatement.setString(2, selectionProblem+"");
+			preparedStatement.setString(3, questionAnswer);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()){
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DatabaseTool.closeResultset(resultSet);
+			DatabaseTool.closeStatement(preparedStatement);
+			DatabaseTool.closeConnection(conn);
+		}
+		
+		return false;
+	}
+	
+	
+	
 }

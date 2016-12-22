@@ -29,6 +29,11 @@ public class User implements Cloneable,Serializable{
 	 */
 	private static final long serialVersionUID = 6434352159756086863L;
 	/**
+	 * id
+	 */
+	private int id;
+	
+	/**
 	 * 存放用户姓名
 	 */
 	private String userName;
@@ -62,6 +67,14 @@ public class User implements Cloneable,Serializable{
 	 */
 	private List<Diary> ownDiaries = new ArrayList<>();
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	/**
 	 * 判断用户登录是否成功
 	 * 用户登录判断    判断用户登录时输入的用户名和密码是否存在,正确
@@ -81,20 +94,6 @@ public class User implements Cloneable,Serializable{
 
 		return isRealUsers;
 	}
-
-
-	/**
-	 * 设置当前登录用户的索引
-	 * @param howManyPeopleLogin
-	 */
-	/*public void setHowManyPeopleLogin(int howManyPeopleLogin) throws ArrayIndexOutOfBoundsException{
-		if(howManyPeopleLogin<0 || howManyPeopleLogin >= Journal.getAllUserInfo().length){
-			throw new ArrayIndexOutOfBoundsException("设置当前登录用户的索引时数组下标越界");
-		} else {
-			this.howManyPeopleLogin = howManyPeopleLogin;
-		}
-	}*/
-
 	
 	/**
 	 * 获取用户名
@@ -255,6 +254,7 @@ public class User implements Cloneable,Serializable{
 	@Override
 	public String toString() {
 		StringBuffer temp = new StringBuffer();
+		temp.append("id:"+this.id+"\n");
 		temp.append("姓名: "+this.userName+"\n");
 		temp.append("显示名: "+this.userDisplayName+"\n");
 		temp.append("密码: "+this.userPassword+"\n");

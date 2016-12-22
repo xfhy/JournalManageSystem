@@ -27,6 +27,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.BackButtonListener;
 import liang.guo.diary.mylistener.MyMouseListener;
@@ -34,7 +35,6 @@ import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.MyRegExp;
-import liang.guo.diary.util.Utility;
 
 /**
  * @author XFHY
@@ -111,7 +111,8 @@ public class RegisteredJournalSystem {
 	public void init() {
 		challengePhrComboBox = new JComboBox<>(User.VERIFICATIONPROBLEM);
 		challengePhrComboBox.setPreferredSize(new Dimension(250, 30));
-
+		challengePhrComboBox.setSelectedIndex(0);  //设置默认选择
+		
 		mainBackGround = new BackgroundPanel(new ImageIcon("image/register/注册界面背景.jpg").getImage());
 		mainBackGround.setBounds(0, 0, 800, 600);
 
@@ -449,7 +450,7 @@ public class RegisteredJournalSystem {
 			}
 			
 			//如果能到达这里,说明上面的数据都已按要求输入
-			if(saveUserToFile()){  //保存用户信息到文件中
+			if(saveUserDatabase()){  //保存用户信息到数据库中
 				icon = new ImageIcon("image/dialog/信息.png");
 				JOptionPane.showMessageDialog(null, "恭喜!注册成功!",
 						"恭喜!注册成功!", JOptionPane.INFORMATION_MESSAGE, icon);
@@ -488,9 +489,9 @@ public class RegisteredJournalSystem {
 	}
 	
 	/**
-	 * 保存当前  注册成功的  用户到文件中
+	 * 保存当前  注册成功的  用户到数据库中
 	 */
-	private boolean saveUserToFile(){
+	private boolean saveUserDatabase(){
 		User userTemp = new User();
 		
 		userTemp.setUserName(userNameTextField.getText());               //设置用户名
@@ -501,11 +502,11 @@ public class RegisteredJournalSystem {
 		//让用户选择 1-5,哪个问题
 		userTemp.setUserChooseProblem(challengePhrComboBox.getSelectedIndex());   
 		//让用户选择需要回答哪个密码提示问题,并获取用户输入的该问题的答案
-		userTemp.setUserQuestionAnswer(challengePhrAnswerTextField.getText());       
+		userTemp.setUserQuestionAnswer(challengePhrAnswerTextField.getText());     
 		
-		boolean addSuccess = Utility.addAllUserInfo(userTemp);   //添加用户到所有用户集合中
-		Utility.saveUserCountsToFile();     //添加用户数目到文件中
-		Utility.saveUserToFile();           //添加用户数据到文件中
+		//添加用户到数据库
+		boolean addSuccess = DatabaseTool.addUserToDatabase(userTemp);
+		
 		return addSuccess;
 	}
 	

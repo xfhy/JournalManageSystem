@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -253,9 +254,11 @@ public class Config {
 		File configFile = new File(CONFIGFILENAME);
 		// FileInputStream:从文件系统中的某个文件中获得输入字节 将配置文件加载到输入流中
 		FileInputStream fileInputStream = null;
+		InputStreamReader inputStreamReader = null;
 		try {
 			fileInputStream = new FileInputStream(configFile);
-			props.load(fileInputStream); // 从输入流中读取属性列表（键和元素对）。
+			inputStreamReader = new InputStreamReader(fileInputStream,"utf-8");
+			props.load(inputStreamReader); // 从输入流中读取属性列表（键和元素对）。
 
 			/*------------从配置文件中读取是否记住密码了的(之前)-------------*/
 			// getProperty()用指定的键在此属性列表中搜索属性
