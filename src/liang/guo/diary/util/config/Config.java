@@ -3,24 +3,13 @@ package liang.guo.diary.util.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Properties;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
+import liang.guo.diary.model.User;
 
 /**
  * @author XFHY
@@ -31,8 +20,11 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class Config {
 
-	public Key key;
-
+	/**
+	 * 当前用户
+	 */
+	public static User currentUser = new User();
+	
 	/**
 	 * 配置文件名称
 	 */
@@ -109,138 +101,7 @@ public class Config {
 		return user_password;
 	}
 
-	/**
-	 * 根据参数生成KEY
-	 */
-	public void getKey(String strKey) {
-		try {
-			KeyGenerator _generator = KeyGenerator.getInstance("DES");
-			_generator.init(new SecureRandom(strKey.getBytes()));
-			this.key = _generator.generateKey();
-			_generator = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	/**
-	 * 文件file进行加密并保存目标文件destFile中
-	 * 
-	 * @param file
-	 *            要加密的文件 如c:/test/srcFile.txt
-	 * @param destFile
-	 *            加密后存放的文件名 如c:/加密后文件.txt
-	 */
-	public void encrypt(String file, String destFile) {
-		getKey("xfhy666");// 生成密匙
-		Cipher cipher = null;
-		InputStream is = null;
-		OutputStream out = null;
-		CipherInputStream cis = null;
-		try {
-			cipher = Cipher.getInstance("DES");
-			cipher.init(Cipher.ENCRYPT_MODE, this.key);
-			is = new FileInputStream(file);
-			out = new FileOutputStream(destFile);
-			cis = new CipherInputStream(is, cipher);
-			byte[] buffer = new byte[1024];
-			int r;
-			while ((r = cis.read(buffer)) > 0) {
-				out.write(buffer, 0, r);
-			}
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (cis != null) {
-				try {
-					cis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * 文件采用DES算法解密文件
-	 * 
-	 * @param file
-	 *            已加密的文件 如c:/加密后文件.txt * @param destFile 解密后存放的文件名 如c:/
-	 *            test/解密后文件.txt
-	 */
-	public void decrypt(String file, String dest) {
-		getKey("xfhy666");// 生成密匙
-		Cipher cipher = null;
-		InputStream is = null;
-		OutputStream out = null;
-		CipherOutputStream cos = null;
-		try {
-			cipher = Cipher.getInstance("DES");
-			cipher.init(Cipher.DECRYPT_MODE, this.key);
-			is = new FileInputStream(file);
-			out = new FileOutputStream(dest);
-			cos = new CipherOutputStream(out, cipher);
-			byte[] buffer = new byte[1024];
-			int r;
-			while ((r = is.read(buffer)) >= 0) {
-				System.out.println();
-				cos.write(buffer, 0, r);
-			}
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (cos != null) {
-				try {
-					cos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 	/**
 	 * 从文件获取 登录 界面 的配置

@@ -9,9 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.Vector;
 
+import liang.guo.diary.enumerate.MoodType;
+import liang.guo.diary.enumerate.WeatherType;
+import liang.guo.diary.model.Date;
 import liang.guo.diary.model.Diary;
 import liang.guo.diary.model.User;
+import liang.guo.diary.util.config.Config;
 
 /**
  * @author XFHY
@@ -391,6 +396,254 @@ public class DatabaseTool {
 		}
 		
 		return num;
+	}
+	
+	/**
+	 * 根据当前用户的id获取数据库中所有的日记
+	 * @return  返回日记列表  Vector<Diary>
+	 */
+	public static Vector<Diary> getAllDiaryById(){
+		int id = Config.currentUser.getId();   //获取当前用户id
+		Vector<Diary> diaries = new Vector<>();
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		//select * from `diary` where `num` in (select `num` from `contact` where `id`=5); #根据日记编号查找日记
+		String sql = "select * from diary where num in (select num from contact where id=?)";
+		
+		try {
+			conn = getConnection();
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()){
+				Diary diary = new Diary();
+				diary.setNum(resultSet.getInt("num"));
+				
+				//获取天气
+				String weather = resultSet.getString("weather");
+				switch (weather) {
+				case "晴":
+					diary.setWeather(WeatherType.SUNNY);
+					break;
+				case "阴天":
+					diary.setWeather(WeatherType.OVERCAST);
+					break;
+				case "多云":
+					diary.setWeather(WeatherType.CLOUDY);
+					break;
+				case "雨":
+					diary.setWeather(WeatherType.RAIN);
+					break;
+				case "雾":
+					diary.setWeather(WeatherType.FOG);
+					break;
+				case "雪":
+					diary.setWeather(WeatherType.SNOW);
+					break;
+				default:
+					diary.setWeather(WeatherType.SUNNY);
+					break;
+				}
+				
+				//获取心情
+				String mood = resultSet.getString("mood");
+				switch (mood) {
+				case "高兴":
+					diary.setMood(MoodType.HAPPY);
+					break;
+				case "郁闷":
+					diary.setMood(MoodType.DEPRESSED);
+					break;
+				case "兴奋":
+					diary.setMood(MoodType.EXCITEMENT);
+					break;
+				case "悲伤":
+					diary.setMood(MoodType.SADNESS);
+					break;
+				case "恐惧":
+					diary.setMood(MoodType.FEAR);
+					break;
+				case "欣喜":
+					diary.setMood(MoodType.DELIGHTED);
+					break;
+				default:
+					diary.setMood(MoodType.HAPPY);
+					break;
+				}
+				
+				//获取标题
+				diary.setTitle(resultSet.getString("title"));
+				//获取日记内容
+				diary.setContent(resultSet.getString("content")); 
+				//获取日期
+				diary.setDate(new Date(resultSet.getDate("mydate").toString()));
+				diaries.add(diary);
+				//System.out.println(diary.toString());
+			}   //循环遍历   添加日记类到集合中
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeResultset(resultSet);
+			closeStatement(preparedStatement);
+			closeConnection(conn);
+		}
+		return diaries;
+	}
+	
+	/**
+	 * 更改日记内容
+	 * @param diary 需要更新的日记
+	 * @return 返回是否更改成功
+	 */
+	public static boolean updateDiary(Diary diary){
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
+		int changeRows = -1;
+		/*
+		 * update `diary` set `weather`='晴',`mood`='高兴',`title`='qwertyu',
+  `content`='dafagagad',`mydate`='1997-12-18' where `num`=1000;      #更新日记
+		 * */
+		String sql = "update diary set weather=?,mood=?,title=?,content=?,mydate=? where num=?";
+		try {
+			conn = getConnection();
+			preparedStatement = conn.prepareStatement(sql);
+			
+			//设置天气
+			switch (diary.getWeather()) {
+			case SUNNY:
+				preparedStatement.setString(1, "晴");
+				break;
+			case CLOUDY:
+				preparedStatement.setString(1, "多云");
+				break;
+			case FOG:
+				preparedStatement.setString(1, "雾");
+				break;
+			case OVERCAST:
+				preparedStatement.setString(1, "阴天");
+				break;
+			case RAIN:
+				preparedStatement.setString(1, "雨");
+				break;
+			case SNOW:
+				preparedStatement.setString(1, "雪");
+				break;
+			default:
+				preparedStatement.setString(1, "晴");
+				break;
+			}
+			
+			//设置心情
+			switch (diary.getMood()) {
+			case DELIGHTED:
+				preparedStatement.setString(2, "欣喜");
+				break;
+			case DEPRESSED:
+				preparedStatement.setString(2, "郁闷");
+				break;
+			case EXCITEMENT:
+				preparedStatement.setString(2, "兴奋");
+				break;
+			case FEAR:
+				preparedStatement.setString(2, "恐惧");
+				break;
+			case HAPPY:
+				preparedStatement.setString(2, "高兴");
+				break;
+			case SADNESS:
+				preparedStatement.setString(2, "悲伤");
+				break;
+			default:
+				preparedStatement.setString(2, "欣喜");
+				break;
+			}
+			
+			preparedStatement.setString(3, diary.getTitle());   //设置标题
+			preparedStatement.setString(4, diary.getContent()); //设置内容
+			preparedStatement.setString(5, diary.getDate().toString());  //设置日期
+			preparedStatement.setInt(6, diary.getNum());   //设置编号
+			
+			changeRows = preparedStatement.executeUpdate();
+			if(changeRows > 0){   //更新成功
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStatement(preparedStatement);
+			closeConnection(conn);
+		}
+		return false;
+	}
+	
+	/**
+	 * 删除日记
+	 * @param num 日记编号
+	 * @return 	返回是否成功删除
+	 */
+	public static boolean deleteDiary(int num){
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
+		int changeRows = -1;
+		//delete from `diary` where `num`=1031; #删除日记
+		String sql = "delete from diary where num=?";
+		try {
+			conn = getConnection();
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, num);
+			
+			changeRows = preparedStatement.executeUpdate();
+			if(changeRows > 0){ //删除成功
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStatement(preparedStatement);
+			closeConnection(conn);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * 判断数据库中是否含有该用户
+	 * @param userName
+	 * @return
+	 */
+	public static boolean haveThisUser(String userName){
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		//select * from user where `username`='xfhy666';  #判断数据库中是否存在
+		String sql = "select * from user where username=?"; 
+		conn = getConnection();
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, userName);
+			
+			resultSet = preparedStatement.executeQuery();
+			if( resultSet.next() ){
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeResultset(resultSet);
+			closeStatement(preparedStatement);
+			closeConnection(conn);
+		}
+		
+		return false;
 	}
 	
 }

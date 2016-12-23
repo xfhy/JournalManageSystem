@@ -35,7 +35,7 @@ public class BackButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JFrameManager.removeJFrame(frameName);   //移除这个JFrame
-		System.out.println(frameName+"已被销毁");
+		//System.out.println(frameName+"已被销毁");
 		jframe.dispose();   //关闭这个JFrame
 		JFrameManager.recoveryModel();   //恢复所有窗口可用
 	}

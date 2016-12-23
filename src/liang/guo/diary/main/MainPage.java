@@ -22,7 +22,6 @@ import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.operation.KeepDiaryWindow;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
-import liang.guo.diary.util.Utility;
 import liang.guo.diary.viewjour.ViewJournalWindow;
 
 
@@ -75,7 +74,7 @@ public class MainPage extends JFrame {
 		mainFrame = this;
 		this.setTitle(JFRAMETITLE);
 		init();
-		System.out.println(Utility.currentUser.toString());
+		//System.out.println(Config.currentUser.toString());
 	}
 	
 	/**

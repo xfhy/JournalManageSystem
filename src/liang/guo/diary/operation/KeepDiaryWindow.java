@@ -41,7 +41,6 @@ import liang.guo.diary.enumerate.WeatherType;
 import liang.guo.diary.main.MainPage;
 import liang.guo.diary.model.Date;
 import liang.guo.diary.model.Diary;
-import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.MyComponentListener;
 import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.operation.cell.MoodComboBoxRenderer;
@@ -50,7 +49,7 @@ import liang.guo.diary.operation.datechooser.DateChooserJButton;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.ShowDialog;
-import liang.guo.diary.util.Utility;
+import liang.guo.diary.util.config.Config;
 
 /**
  * @author  XFHY
@@ -120,18 +119,14 @@ public class KeepDiaryWindow extends JFrame{
 	 */
 	private JPanel imagePanel;
 	
-	//当前用户的信息
-	private User user;
-	
 	/**
 	 * 构造函数
 	 */
 	public KeepDiaryWindow(){
-		user = Utility.currentUser;
 		this.setTitle("写日记");
 		mainFrame = this;
 		init();
-		System.out.println(Utility.currentUser.toString());
+		//System.out.println(Config.currentUser.toString());
 	}
 	
 	/**
@@ -444,9 +439,8 @@ public class KeepDiaryWindow extends JFrame{
 			diary.setContent(content);
 			
 			//将这个日记类放到当前用户的数据中去
-			user.addDiary(diary);
 //			if(user.addDiary(diary)){
-//				if(Utility.saveUserToFile()){        //将用户数据保存到文件中
+//				if(Config.saveUserToFile()){        //将用户数据保存到文件中
 //					
 //					Icon icon = new ImageIcon("image/dialog/完成.png");
 //					ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
@@ -465,7 +459,7 @@ public class KeepDiaryWindow extends JFrame{
 				}
 				
 				//添加日记与用户的联系到数据库中
-				if(DatabaseTool.addContactToDatabase(Utility.currentUser.getId(), num)){
+				if(DatabaseTool.addContactToDatabase(Config.currentUser.getId(), num)){
 					Icon icon = new ImageIcon("image/dialog/完成.png");
 					ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
 				}

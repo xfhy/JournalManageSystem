@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.util.ShowDialog;
-import liang.guo.diary.util.Utility;
+import liang.guo.diary.util.config.Config;
 
 /**
  * @author  XFHY
@@ -67,14 +67,14 @@ public class LoginCheck {
 			
 			resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()){   //判断是否存在下一个,即有这个用户么?
-				Utility.currentUser.setId(resultSet.getInt("id"));
-				Utility.currentUser.setUserName(resultSet.getString("username"));
-				Utility.currentUser.setUserDisplayName(resultSet.getString("disname"));
-				Utility.currentUser.setUserPassword(resultSet.getString("password"));
-				Utility.currentUser.setUserMailBox(resultSet.getString("email"));
-				Utility.currentUser.setUserChooseProblem(Integer.parseInt(resultSet.getString("ansindex")));
-				Utility.currentUser.setUserQuestionAnswer(resultSet.getString("answer"));
-				System.out.println(Utility.currentUser.toString());
+				Config.currentUser.setId(resultSet.getInt("id"));
+				Config.currentUser.setUserName(resultSet.getString("username"));
+				Config.currentUser.setUserDisplayName(resultSet.getString("disname"));
+				Config.currentUser.setUserPassword(resultSet.getString("password"));
+				Config.currentUser.setUserMailBox(resultSet.getString("email"));
+				Config.currentUser.setUserChooseProblem(Integer.parseInt(resultSet.getString("ansindex")));
+				Config.currentUser.setUserQuestionAnswer(resultSet.getString("answer"));
+				//System.out.println(Config.currentUser.toString());
 				return LOGINSYSTEMSUCCESS;
 			} else {
 				return NOTLEGITIMATEUSERS;

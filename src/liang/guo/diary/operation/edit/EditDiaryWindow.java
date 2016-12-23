@@ -33,6 +33,7 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.enumerate.MoodType;
 import liang.guo.diary.enumerate.WeatherType;
 import liang.guo.diary.model.Date;
@@ -45,7 +46,6 @@ import liang.guo.diary.operation.datechooser.DateChooserJButton;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.ShowDialog;
-import liang.guo.diary.util.Utility;
 import liang.guo.diary.viewjour.ViewJournalWindow;
 
 /**
@@ -124,6 +124,7 @@ public class EditDiaryWindow extends JFrame {
 		this.setTitle("写日记");
 		mainFrame = this;
 		init();
+		//System.out.println(diary.toString());
 	}
 
 	/**
@@ -514,6 +515,7 @@ public class EditDiaryWindow extends JFrame {
 				break;
 			}
 			
+			
 			// 保存用户的数据
 			diary.setWeather(weather);
 			diary.setMood(mood);
@@ -521,15 +523,26 @@ public class EditDiaryWindow extends JFrame {
 			diary.setTitle(title);
 			diary.setContent(content);
 			
-			//以后是用数据库操作,这里需要判断一下是否保存成功
-			if(Utility.saveUserToFile()){        //将用户数据保存到文件中
-				
+			/*----------- 日记更新->数据库 ----------*/
+			//System.out.println(diary);
+			if(DatabaseTool.updateDiary(diary)){
 				Icon icon = new ImageIcon("image/dialog/完成.png");
 				ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
 				backLastWindow();    //返回
+			} else {
+				Icon icon = new ImageIcon("image/dialog/错误.png");
+				ShowDialog.showMyDialog("保存失败~", "保存失败", JOptionPane.ERROR_MESSAGE, icon);
 			}
 			
-			//System.out.println(diary.toString());
+//			
+//			//以后是用数据库操作,这里需要判断一下是否保存成功
+//			if(Config.saveUserToFile()){        //将用户数据保存到文件中
+//				
+//				Icon icon = new ImageIcon("image/dialog/完成.png");
+//				ShowDialog.showMyDialog("保存成功~", "保存成功", JOptionPane.DEFAULT_OPTION, icon);
+//				backLastWindow();    //返回
+//			}
+			
 		}
 		
 	}

@@ -449,6 +449,13 @@ public class RegisteredJournalSystem {
 				return ;
 			}
 			
+			//判断数据库中是否存在该用户
+			if (DatabaseTool.haveThisUser(userNameTextField.getText())) {
+				JOptionPane.showMessageDialog(null, "亲,该用户名已存在",
+						"亲,该用户名已存在", JOptionPane.ERROR_MESSAGE, icon);
+				return ;
+			}
+			
 			//如果能到达这里,说明上面的数据都已按要求输入
 			if(saveUserDatabase()){  //保存用户信息到数据库中
 				icon = new ImageIcon("image/dialog/信息.png");
@@ -468,7 +475,7 @@ public class RegisteredJournalSystem {
 		//上面已经判断了正则表达式,确保不是其他字符,这里只需要判断长度6~20位即可
 		String userName = userNameTextField.getText();    
 		//6~20位    且不含有该用户名
-		if(userName.length() >=6 && userName.length() <= 20 && !User.haveThisUser(userName)){
+		if(userName.length() >=6 && userName.length() <= 20){
 			return true;
 		} else {
 			return false;

@@ -31,14 +31,12 @@ import javax.swing.plaf.FontUIResource;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 import liang.guo.diary.main.MainPage;
-import liang.guo.diary.model.User;
 import liang.guo.diary.mylistener.MyKeyListener;
 import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.register.RegisteredJournalSystem;
 import liang.guo.diary.retripasw.RetrievePasswordWindow;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.ShowDialog;
-import liang.guo.diary.util.Utility;
 import liang.guo.diary.util.config.Config;
 
 /**
@@ -313,8 +311,6 @@ public class LoginJournalSystem {
             JOptionPane.showMessageDialog(null, "set skin fail!", "通知", JOptionPane.WARNING_MESSAGE);
         }  
         
-        Utility.loadUserFileToProgram();    //装载之前用户保存成文件的信息
-        
         new LoginJournalSystem().showUI(true);
 	}
 
@@ -442,7 +438,7 @@ public class LoginJournalSystem {
 		if(isLoginSuccess == LoginCheck.LOGINSYSTEMSUCCESS){
 			new MainPage().showUI();    //打开主界面
 			
-			//Utility.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
+			//Config.currentUser = User.getUserByName(name);    //得到当前用户  的信息 
 			
 			mainFrame.dispose();
 		} else if (isLoginSuccess == LoginCheck.NOTLEGITIMATEUSERS){   //不是合法用户

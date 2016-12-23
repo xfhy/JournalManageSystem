@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,17 +36,16 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import liang.guo.diary.comparator.ContentComparator;
 import liang.guo.diary.comparator.DateComparator;
 import liang.guo.diary.comparator.TitleComparator;
+import liang.guo.diary.database.DatabaseTool;
 import liang.guo.diary.enumerate.MoodType;
 import liang.guo.diary.enumerate.WeatherType;
 import liang.guo.diary.main.MainPage;
-import liang.guo.diary.model.Date;
 import liang.guo.diary.model.Diary;
 import liang.guo.diary.mylistener.MyWindowListener;
 import liang.guo.diary.operation.edit.EditDiaryWindow;
 import liang.guo.diary.util.BackgroundPanel;
 import liang.guo.diary.util.JFrameManager;
 import liang.guo.diary.util.ShowDialog;
-import liang.guo.diary.util.Utility;
 import liang.guo.diary.viewjour.cell.DiaryCellRenderer;
 
 /**
@@ -87,6 +87,7 @@ public class ViewJournalWindow extends JFrame {
 	JButton findDiaryBtn = new JButton("查找");
 	JButton showAllDiaryBtn = new JButton("显示全部");
 	JButton seeDiary = new JButton("查看");
+	JButton deleteBtn = new JButton("删除");
 	JButton backBtn = new JButton("返回");
 	
 	/**
@@ -119,42 +120,14 @@ public class ViewJournalWindow extends JFrame {
 	 */
 	public ViewJournalWindow(){
 		mainFrame = this;
-		//test();
 		init();
-	}
-	
-	/////////////测试用
-	public void test(){
-		Diary diary1 = new Diary();
-		diary1.setMood(MoodType.DELIGHTED);
-		diary1.setWeather(WeatherType.CLOUDY);
-		diary1.setTitle("hhh");
-		diary1.setContent("这是内容");
-		diary1.setDate(new Date("2012-12-12"));
-		
-		Diary diary2 = new Diary();
-		diary2.setMood(MoodType.DEPRESSED);
-		diary2.setWeather(WeatherType.FOG);
-		diary2.setTitle("AAA");
-		diary2.setContent("这是内容........");
-		diary2.setDate(new Date("2001-02-02"));
-		
-		Diary diary3 = new Diary();
-		diary3.setMood(MoodType.EXCITEMENT);
-		diary3.setWeather(WeatherType.OVERCAST);
-		diary3.setTitle("ccc");
-		diary3.setContent("哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈");
-		diary3.setDate(new Date("2007-07-06"));
-		diaries.add(diary1);
-		diaries.add(diary2);
-		diaries.add(diary3);
 	}
 	
 	/**
 	 * 初始化
 	 */
 	public void init(){
-		diaries.addAll(Utility.currentUser.getOwnDiaries());    //加载  当前用户的日记数据
+		diaries.addAll(DatabaseTool.getAllDiaryById());   //从数据库加载  当前用户的日记数据
 		
 		diaryList = new JList<>(diaries);
 		diaryList.setCellRenderer(diaryCellRenderer);
@@ -184,7 +157,8 @@ public class ViewJournalWindow extends JFrame {
 		findDiaryBtn.addActionListener(new findDiaryBtnListener());       //查找按钮
 		seeDiary.addActionListener(new SeeDiaryBtnListener());            //查看日记
 		showAllDiaryBtn.addActionListener(new ShowAllDiariesListener());  //显示所有日记
-		backBtn.addActionListener(new BackBtnListener());                 //返回按钮
+		deleteBtn.addActionListener(new DeleteBtnListener());             //删除选中日记
+ 		backBtn.addActionListener(new BackBtnListener());                 //返回按钮
 		
 		//设置JList只能单选
 		diaryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
@@ -285,7 +259,7 @@ public class ViewJournalWindow extends JFrame {
 		centerPanel.setOpaque(false);   //设置这个容器是透明的
 		
 		//控制外边距的
-		Insets insets = new Insets(10, 50, 0, 0);
+		Insets insets = new Insets(10, 30, 0, 0);
 		
 		//排序方式Label
 		gridBagConstraints.insets = insets;
@@ -304,16 +278,24 @@ public class ViewJournalWindow extends JFrame {
 		setComponentStyle(3, 0, 0, 0, 1, 1, findByTextField, centerPanel);
 		
 		//查找按钮
+		insets.set(10, 10, 0, 0);
 		setComponentStyle(4, 0, 0, 0, GridBagConstraints.REMAINDER, 1, findDiaryBtn, centerPanel);
 		
 		//中间的日记列表
+		insets.set(10, 10, 0, 0);
 		setComponentStyle(0, 1, 80, 40, GridBagConstraints.REMAINDER, 1, jScrollPane, centerPanel);
 		
 		//显示全部  按钮
-		setComponentStyle(1, 2, 10, 0, 1, 1, showAllDiaryBtn, centerPanel);
+		insets.set(10, 80, 0, 0);
+		setComponentStyle(0, 2, 10, 0, 1, 1, showAllDiaryBtn, centerPanel);
 		
 		//查看按钮
-		setComponentStyle(2, 2, 50, 0, 1, 1, seeDiary, centerPanel);
+		insets.set(10, 40, 0, 0);
+		setComponentStyle(1, 2, 50, 0, 1, 1, seeDiary, centerPanel);
+		
+		//删除按钮
+		insets.set(10, 10, 0, 0);
+		setComponentStyle(2, 2, 30, 0, 1, 1, deleteBtn, centerPanel);
 		
 		//返回按钮
 		setComponentStyle(3, 2, 10, 0, 1, 1, backBtn, centerPanel);
@@ -322,7 +304,6 @@ public class ViewJournalWindow extends JFrame {
 		centerPanel.setLayout(viewDiaryCenterBagLayout);
 		return centerPanel;
 	}
-	
 	
 	/**
 	 * 按照日期排序
@@ -552,9 +533,8 @@ public class ViewJournalWindow extends JFrame {
 			if(diaryList.getSelectedIndex() < 0){
 				return ;
 			}
-			Diary diary = diaryList.getSelectedValue();
-			//System.out.println(diary.toString());
-			new EditDiaryWindow(diary).showUI();
+			Diary diary = diaryList.getSelectedValue();   //获取用户选择的当前日记选项
+			new EditDiaryWindow(diary).showUI();    //打开编辑日记窗口
 			mainFrame.dispose();
 		}
 		
@@ -570,6 +550,36 @@ public class ViewJournalWindow extends JFrame {
 			isShowAllDiary = true;             //将是否查看所有日记类    这个标记   设为true
 			diaryList.setListData(diaries);    //重新设置JList的数据
 			diaryList.updateUI();              //更新UI
+		}
+		
+	}
+	
+	/**
+	 * 删除按钮监听器
+	 * @author XFHY
+	 *
+	 */
+	class DeleteBtnListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(diaryList.getSelectedIndex() < 0){
+				return ;
+			}
+			
+			Diary diary = diaryList.getSelectedValue();   //获取用户选择的当前日记选项
+			if( DatabaseTool.deleteDiary(diary.getNum()) ){   //通过日记编号删除日记
+				Icon icon = new ImageIcon("image/dialog/完成.png");
+				ShowDialog.showMyDialog("删除成功~", "删除成功", JOptionPane.DEFAULT_OPTION, icon);
+				
+				diaries.remove(diary);
+				diaryList.setListData(diaries);    //重新设置JList的数据
+				diaryList.updateUI();              //更新UI
+				
+			} else {
+				Icon icon = new ImageIcon("image/dialog/错误.png");
+				ShowDialog.showMyDialog("删除失败..", "删除失败", JOptionPane.ERROR_MESSAGE, icon);
+			}
 		}
 		
 	}
